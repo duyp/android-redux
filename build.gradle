@@ -5,7 +5,7 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
@@ -19,7 +19,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+
     }
 }
 
@@ -31,28 +31,34 @@ project.ext {
     kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     ktx = "androidx.core:core-ktx:1.0.2"
 
+    config = [
+            compileVersion: 28,
+            minSdk        : 21,
+            targetSdk     : 28,
+    ]
+
     versions = [
-            androidx    : "1.0.0",
-            appcompat   : "1.0.2",
-            annocation  : "1.0.0",
-            material    : "1.1.0-alpha05",
+            androidx        : "1.0.0",
+            appcompat       : "1.0.2",
+            annocation      : "1.0.0",
+            material        : "1.1.0-alpha05",
             constraintLayout: "1.1.3",
-            javax       : "1",
-            retrofit    : "2.6.1",
-            okHttp      : "3.14.2",
-            rxJava      : "2.2.11",
-            rxAndroid   : "2.1.1",
-            rxRelay     : "2.1.0",
-            rxRedux     : "1.0.1",
-            room        : "2.1.0",
-            arch        : "2.0.1",
-            dagger      : "2.22.1",
-            hamcrest    : "1.3",
-            mockito     : "2.25.0",
-            mockitoKt   : "2.1.0",
-            powerMock   : "2.0.2",
-            junit       : "4.12",
-            junitParams : "1.1.1"
+            javax           : "1",
+            retrofit        : "2.6.1",
+            okHttp          : "3.14.2",
+            rxJava          : "2.2.11",
+            rxAndroid       : "2.1.1",
+            rxRelay         : "2.1.0",
+            rxRedux         : "1.0.1",
+            room            : "2.1.0",
+            arch            : "2.0.1",
+            dagger          : "2.22.1",
+            hamcrest        : "1.3",
+            mockito         : "2.25.0",
+            mockitoKt       : "2.1.0",
+            powerMock       : "2.0.2",
+            junit           : "4.12",
+            junitParams     : "1.1.1"
     ]
 
     appcompat = "androidx.appcompat:appcompat:${versions.appcompat}"
@@ -100,4 +106,20 @@ project.ext {
     androidTestRunner = "androidx.test:runner:${versions.testRunner}"
     androidTestRules = "androidx.test:rules:${versions.testRunner}"
     robolectric = "org.robolectric:robolectric:${versions.robolectric}"
+}
+
+ext.getVersionCode = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            workingDir projectDir
+            executable 'git'
+            args 'rev-list', '--count', 'HEAD'
+            standardOutput = stdout
+        }
+        int numberOfCommits = stdout.toString().trim().toInteger()
+        return numberOfCommits
+    } catch (Exception e) {
+        throw e
+    }
 }
