@@ -1,0 +1,43 @@
+<template name="Redux"
+          description="Create a feature using Redux"
+          format="4"
+          revision="1">
+
+    <category value="Other"/>
+
+    <parameter name="Feature Name"
+               constraints="class|unique|nonempty"
+               default="Redux"
+               help="The name of the feature using Redux, this is prefix for all classes"
+               id="featureName"
+               type="string"/>
+
+    <parameter name="Use Fragment? uncheck if you want to use Activity for the feature."
+               default="true"
+               help="Check to use Fragment, uncheck to use Activity for the feature"
+               id="useFragment"
+               type="boolean"/>
+
+    <parameter name="Has navigation to other screens?"
+               default="true"
+               help="Generate Navigation class and necessary setup"
+               id="hasNavigation"
+               type="boolean"/>
+
+    <parameter name="Has tracking? If yes it will generate tracking side effect in a separate file."
+               default="true"
+               help="Generate tracking side effect in separate file"
+               id="hasTracking"
+               type="boolean"/>
+
+    <parameter
+        name="Has image loader? If yes the image loader dagger module will be configured for the fragment / activity"
+        default="false"
+        help="If yes the image loader dagger module will be configured for the fragment / activity"
+        id="hasImageLoader"
+        type="boolean"/>
+
+    <globals file="globals.xml.ftl"/>
+    <execute file="recipe.xml.ftl"/>
+
+</template>
