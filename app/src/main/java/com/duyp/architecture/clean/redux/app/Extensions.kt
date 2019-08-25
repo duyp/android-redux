@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.duyp.architecture.clean.redux.BuildConfig
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 

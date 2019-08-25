@@ -1,6 +1,6 @@
-package com.duyp.architecture.clean.redux.app.features.list
+package com.duyp.architecture.clean.redux.app.features.repo.list
 
-import com.duyp.architecture.clean.redux.app.features.list.item.RepoViewData
+import com.duyp.architecture.clean.redux.app.features.repo.list.item.RepoViewData
 
 sealed class RepoListItem {
 

@@ -1,4 +1,4 @@
-package com.duyp.architecture.clean.redux.app.features.list
+package com.duyp.architecture.clean.redux.app.features.repo.list
 
 sealed class RepoListState(currentState: RepoListState?) {
 

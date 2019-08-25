@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 
 import androidx.core.view.GravityCompat;
 
-import com.duyp.architecture.clean.redux.app.R;
+import com.duyp.architecture.clean.redux.R;
 
 import java.util.ArrayList;
 

@@ -1,12 +1,12 @@
-package com.duyp.architecture.clean.redux.app.features.list
+package com.duyp.architecture.clean.redux.app.features.repo.list
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.duyp.architecture.clean.redux.app.features.list.item.RepoViewHolder
-import com.duyp.architecture.clean.redux.app.widgets.PageLoadingViewHolder
+import com.duyp.architecture.clean.redux.app.features.repo.list.item.RepoViewHolder
+import com.duyp.architecture.clean.redux.app.features.shared.PageLoadingViewHolder
 
 private val diffCallback = object : DiffUtil.ItemCallback<RepoListItem>() {
 
@@ -37,7 +37,9 @@ class RepoListAdapter(private val onItemClick: (Long) -> Unit) :
             RepoListItem.VIEW_TYPE_REPO -> RepoViewHolder(false, parent) {
                 onItemClick(it)
             }
-            else -> PageLoadingViewHolder(parent)
+            else -> PageLoadingViewHolder(
+                parent
+            )
         }
     }
 
