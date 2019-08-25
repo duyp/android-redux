@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion config.compileVersion
+
+    defaultConfig {
+        minSdkVersion config.minSdk
+        targetSdkVersion config.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation project(':domain')
+
+    implementation rootProject.kotlin
+
+    compileOnly javaxInject
+
+    implementation dagger
+    kapt daggerCompiler
+
+    implementation room
+    implementation roomRx
+    kapt roomCompiler
+
+    implementation retrofit
+    implementation retrofitGsonConverter
+    implementation retrofitRxJava2Adapter
+    implementation okHttpLogging
+
+    testImplementation junit
+}

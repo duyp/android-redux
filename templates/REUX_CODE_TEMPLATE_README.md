@@ -15,7 +15,7 @@ Purpose: 1 click to generate all necessary structured classes: state machine, st
 
 ### Install Redux code template
 
-Run this in command line (MacOS). Please make sure you `cd` to your root directory of IS24 project:
+Run this in command line (MacOS). Please make sure you `cd` to your root directory of the project:
 
 `cp -a templates/Redux/. /Applications/Android\ Studio.app/Contents/plugins/android/lib/templates/other/Redux`
 

@@ -23,6 +23,7 @@ allprojects {
     }
 }
 
+// optimize dagger performance
 allprojects {
     afterEvaluate {
         extensions.findByName('kapt')?.arguments {
@@ -104,6 +105,8 @@ ext {
     daggerSupport = "com.google.dagger:dagger-android-support:${versions.dagger}"
 
     javaxInject = "javax.inject:javax.inject:${versions.javax}"
+
+    circularimageview = 'com.mikhaellopez:circularimageview:3.2.0'
 
     // unit testing
     junit = "junit:junit:${versions.junit}"

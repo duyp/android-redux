@@ -36,11 +36,13 @@ android {
 }
 
 dependencies {
-    implementation project(":api")
-    implementation project(":search")
+    implementation project(':data')
+    implementation project(':domain')
 
     implementation ext.kotlin
     implementation appcompat
+    implementation recyclerView
+    implementation cardView
 
     implementation dagger
     implementation daggerAndroid
