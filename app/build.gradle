@@ -27,5 +27,5 @@ dependencies {
     implementation rootProject.ext.appcompat
     implementation rootProject.ext.ktx
 
-    testImplementation rootProject.ext.jUnit
+    testImplementation rootProject.ext.junit
 }
