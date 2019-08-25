@@ -26,3 +26,23 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+project.ext {
+    kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    ktx = "androidx.core:core-ktx:1.0.2"
+
+    appcompat = "androidx.appcompat:appcompat:1.0.2"
+    annotation = "androidx.annotation:annotation:1.0.0"
+
+    playService = "com.google.android.gms:play-services-vision:18.0.0"
+
+    room = "androidx.room:room-runtime:2.1.0"
+    roomCompiler = "androidx.room:room-compiler:2.0.0"
+
+    rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
+    rxJava = "io.reactivex.rxjava2:rxjava:2.1.0"
+
+    gson = "com.google.code.gson:gson:2.8.5"
+
+    jUnit = 'junit:junit:4.12'
+}
