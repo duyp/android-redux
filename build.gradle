@@ -23,11 +23,20 @@ allprojects {
     }
 }
 
+allprojects {
+    afterEvaluate {
+        extensions.findByName('kapt')?.arguments {
+            arg("dagger.formatGeneratedSource", "disabled")
+            arg("dagger.gradle.incremental", "enabled")
+        }
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-project.ext {
+ext {
     kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     ktx = "androidx.core:core-ktx:1.0.2"
 
@@ -39,6 +48,7 @@ project.ext {
 
     versions = [
             androidx        : "1.0.0",
+            lifecycle       : "2.0.0",
             appcompat       : "1.0.2",
             annocation      : "1.0.0",
             material        : "1.1.0-alpha05",
@@ -68,6 +78,9 @@ project.ext {
     recyclerView = "androidx.recyclerview:recyclerview:${versions.androidx}"
     constraintLayout = "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}"
 
+    lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
+    lifecycleCompiler = "androidx.lifecycle:lifecycle-common-java8:${versions.lifecycle}"
+
     retrofit = "com.squareup.retrofit2:retrofit:${versions.retrofit}"
     retrofitGsonConverter = "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
     retrofitRxJava2Adapter = "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
@@ -83,10 +96,6 @@ project.ext {
     roomCompiler = "androidx.room:room-compiler:${versions.room}"
     roomRx = "androidx.room:room-rxjava2:${versions.room}"
     roomTestHelper = "androidx.room:room-testing:${versions.room}"
-
-    lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${versions.androidxLifecycle}"
-    lifecycleCompiler = "androidx.lifecycle:lifecycle-common-java8:${versions.androidxLifecycle}"
-    archCoreTesting = "androidx.arch.core:core-testing:${versions.arch}"
 
     dagger = "com.google.dagger:dagger:${versions.dagger}"
     daggerAndroid = "com.google.dagger:dagger-android:${versions.dagger}"

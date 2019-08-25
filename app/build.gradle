@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 def ext = rootProject.ext
 
 android {
@@ -17,6 +19,12 @@ android {
         versionCode ext.getVersionCode()
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
     }
 
     buildTypes {
@@ -28,8 +36,21 @@ android {
 }
 
 dependencies {
-    implementation ext.kotlin
-    implementation ext.appcompat
+    implementation project(":api")
+    implementation project(":search")
 
-    testImplementation ext.junit
+    implementation ext.kotlin
+    implementation appcompat
+
+    implementation dagger
+    implementation daggerAndroid
+    implementation daggerSupport
+    kapt daggerCompiler
+    kapt daggerAndroidCompiler
+
+    implementation room
+    implementation roomRx
+    kapt roomCompiler
+
+    testImplementation junit
 }
