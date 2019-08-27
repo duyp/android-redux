@@ -9,10 +9,13 @@ val searchDiffCallback = object : DiffUtil.ItemCallback<SearchItem>() {
         if (oldItem::class != newItem::class)
             return false
 
-        if (oldItem is SearchItem.Repo && newItem is SearchItem.Repo)
+        if (oldItem is SearchItem.RecentRepo && newItem is SearchItem.RecentRepo)
             return oldItem.data.id == newItem.data.id
 
-        if (oldItem is SearchItem.NextPageLoading ||
+        if (oldItem is SearchItem.PublicRepo && newItem is SearchItem.PublicRepo)
+            return oldItem.data.id == newItem.data.id
+
+        if (oldItem is SearchItem.Loading ||
             oldItem is SearchItem.RecentRepoHeader ||
             oldItem is SearchItem.PublicRepoHeader
         )

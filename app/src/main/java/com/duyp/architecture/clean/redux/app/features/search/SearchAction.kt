@@ -4,7 +4,7 @@ interface SearchAction
 
 sealed class SearchViewAction : SearchAction {
 
-    data class SearchRepo(val searchQuery: String) : SearchViewAction()
+    data class SearchTyping(val searchQuery: String) : SearchViewAction()
 
     object LoadNextPage : SearchViewAction()
 
