@@ -6,7 +6,5 @@ interface ListEntity<T> {
 
     fun totalCount(): Long
 
-    fun nextPage(): Int
-
-    fun lastPage(): Int
+    fun hasMore(): Boolean
 }

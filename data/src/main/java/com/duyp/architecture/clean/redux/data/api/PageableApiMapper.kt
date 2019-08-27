@@ -9,8 +9,11 @@ fun <EntityType, ApiType : EntityType> PageableApiData<ApiType>.toEntity(): List
 
         override fun totalCount(): Long = totalCount ?: 0
 
-        override fun nextPage(): Int = next ?: 0
-
-        override fun lastPage(): Int = last ?: 0
+        override fun hasMore(): Boolean {
+            if (next == null)
+                return false
+            val lastPage = last ?: 0
+            return next!! <= lastPage
+        }
     }
 }

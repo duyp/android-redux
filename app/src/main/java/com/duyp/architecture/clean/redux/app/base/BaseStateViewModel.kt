@@ -3,36 +3,34 @@ package com.duyp.architecture.clean.redux.app.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jakewharton.rxrelay2.PublishRelay
-import com.jakewharton.rxrelay2.Relay
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 
 abstract class BaseStateViewModel<S, A> : ViewModel() {
 
-    private val inputRelay: Relay<A> = PublishRelay.create()
+    private val inputSubject: Subject<A> = PublishSubject.create()
 
     private val mutableState = MutableLiveData<S>()
 
-    protected val disposables = CompositeDisposable()
+    private val disposables = CompositeDisposable()
 
     val state: LiveData<S> = mutableState
 
-    val input: Consumer<A> = inputRelay
-
     /**
-     * Init the view model with input and state. Must be called in constructor of child classes
+     * Init the view model with input actions and state. Must be called in constructor of child classes
      *
-     * @param inputConsumer consume actions emitted by [input] for further processes
+     * @param inputConsumer consume actions emitted by [inputSubject] for further processes
      *
      * @param stateObservable observable emitting states which will be passed to [state] live data to update the view
      */
     protected fun init(inputConsumer: Consumer<A>, stateObservable: Observable<S>) {
         addDisposable {
-            inputRelay.subscribe(inputConsumer)
+            inputSubject.subscribe(inputConsumer)
         }
         addDisposable {
             stateObservable
@@ -42,12 +40,12 @@ abstract class BaseStateViewModel<S, A> : ViewModel() {
         }
     }
 
-    protected inline fun addDisposable(disposable: () -> Disposable) {
+    private inline fun addDisposable(disposable: () -> Disposable) {
         disposables.add(disposable())
     }
 
-    open fun doAction(action: A) {
-        inputRelay.accept(action)
+    fun doAction(action: A) {
+        inputSubject.onNext(action)
     }
 
     override fun onCleared() {

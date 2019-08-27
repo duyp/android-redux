@@ -1,4 +1,4 @@
-package com.duyp.architecture.clean.redux.app.features.shared
+package com.duyp.architecture.clean.redux.app.features.search.items
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

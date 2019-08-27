@@ -43,12 +43,19 @@ dependencies {
     implementation appcompat
     implementation recyclerView
     implementation cardView
+    implementation material
+    implementation circularimageview
 
     implementation dagger
     implementation daggerAndroid
     implementation daggerSupport
     kapt daggerCompiler
     kapt daggerAndroidCompiler
+
+    implementation rxJava
+    implementation rxAndroid
+    implementation rxRedux
+    implementation rxRelay
 
     implementation room
     implementation roomRx
