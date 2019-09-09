@@ -1,6 +1,10 @@
-package com.duyp.architecture.clean.redux.data.api
+package com.duyp.architecture.clean.redux.data.di
 
 import android.content.Context
+import com.duyp.architecture.clean.redux.data.BuildConfig
+import com.duyp.architecture.clean.redux.data.api.ApiConstants
+import com.duyp.architecture.clean.redux.data.api.GithubDateDeserializer
+import com.duyp.architecture.clean.redux.data.api.GithubResponseConverter
 import com.duyp.architecture.clean.redux.data.api.interceptors.ContentTypeInterceptor
 import com.duyp.architecture.clean.redux.data.api.interceptors.PaginationInterceptor
 import com.google.gson.FieldNamingPolicy
@@ -85,11 +89,7 @@ object ApiModule {
         Retrofit.Builder()
             .baseUrl(BuildConfig.REST_URL)
             .client(okHttpClient)
-            .addConverterFactory(
-                GithubResponseConverter(
-                    gson
-                )
-            )
+            .addConverterFactory(GithubResponseConverter(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
 }

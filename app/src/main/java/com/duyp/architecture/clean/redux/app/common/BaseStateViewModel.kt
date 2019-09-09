@@ -1,4 +1,4 @@
-package com.duyp.architecture.clean.redux.app.base
+package com.duyp.architecture.clean.redux.app.common
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

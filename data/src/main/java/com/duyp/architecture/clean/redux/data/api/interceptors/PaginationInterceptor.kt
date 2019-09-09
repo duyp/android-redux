@@ -3,7 +3,7 @@ package com.duyp.architecture.clean.redux.data.api.interceptors
 import android.net.Uri
 import okhttp3.Interceptor
 import okhttp3.Response
-import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import java.io.IOException
 
 class PaginationInterceptor : Interceptor {
@@ -12,7 +12,7 @@ class PaginationInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
-        val headers = chain.request().headers()
+        val headers = chain.request().headers
         if (headers.values("Accept").contains("application/vnd.github.html") ||
             headers.values("Accept").contains("application/vnd.github.VERSION.raw")
         ) {
@@ -45,9 +45,9 @@ class PaginationInterceptor : Interceptor {
                             )
                     }
                 }
-                json.append(String.format("\"items\":%s}", response.body()!!.string()))
+                json.append(String.format("\"items\":%s}", response.body!!.string()))
                 return response.newBuilder()
-                    .body(ResponseBody.create(response.body()!!.contentType(), json.toString()))
+                    .body(json.toString().toResponseBody(response.body!!.contentType()))
                     .build()
             } else if (response.header("link") != null) {
                 val link = response.header("link")
@@ -74,13 +74,11 @@ class PaginationInterceptor : Interceptor {
                         )
                 }
                 if (pagination.toString().isNotEmpty()) {//hacking for search pagination.
-                    val body = response.body()!!.string()
+                    val body = response.body!!.string()
                     return response.newBuilder()
                         .body(
-                            ResponseBody.create(
-                                response.body()!!.contentType(),
-                                "{" + pagination + body.substring(1, body.length)
-                            )
+                            ("{" + pagination + body.substring(1, body.length))
+                                .toResponseBody(response.body!!.contentType())
                         )
                         .build()
                 }

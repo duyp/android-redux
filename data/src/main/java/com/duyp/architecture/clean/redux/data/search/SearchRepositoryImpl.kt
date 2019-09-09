@@ -1,6 +1,7 @@
 package com.duyp.architecture.clean.redux.data.search
 
 import com.duyp.architecture.clean.redux.data.api.toEntity
+import com.duyp.architecture.clean.redux.data.repo.RepoApiData
 import com.duyp.architecture.clean.redux.data.repo.toLocal
 import com.duyp.architecture.clean.redux.domain.ListEntity
 import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
@@ -22,7 +23,7 @@ class SearchRepositoryImpl @Inject constructor(
                 }
             }
             .map {
-                it.toEntity()
+                it.toEntity<RepoEntity, RepoApiData>()
             }
     }
 }

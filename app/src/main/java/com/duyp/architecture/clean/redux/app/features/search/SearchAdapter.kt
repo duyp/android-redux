@@ -25,7 +25,7 @@ class SearchAdapter(private val onItemClick: (Long) -> Unit) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         getItem(position).let {
             when (it) {
-                is SearchItem.Repo -> (holder as RepoViewHolder).bindData(
+                is SearchItem.PublicRepo -> (holder as RepoViewHolder).bindData(
                     it.data
                 )
                 is SearchItem.RecentRepoHeader -> (holder as HeaderViewHolder).bindData(

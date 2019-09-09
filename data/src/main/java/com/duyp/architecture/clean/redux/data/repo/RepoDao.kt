@@ -3,6 +3,7 @@ package com.duyp.architecture.clean.redux.repo.data.database
 import androidx.room.Dao
 import androidx.room.Query
 import com.duyp.architecture.clean.redux.data.database.BaseDao
+import com.duyp.architecture.clean.redux.data.repo.RepoLocalData
 import io.reactivex.Single
 
 @Dao
@@ -16,4 +17,7 @@ abstract class RepoDao : BaseDao<RepoLocalData>() {
 
     @Query("SELECT * FROM Repository WHERE id = :id")
     abstract fun getById(id: Long): Single<RepoLocalData>
+
+    @Query("SELECT * FROM Repository")
+    abstract fun getRecentRepos(): Single<List<RepoLocalData>>
 }

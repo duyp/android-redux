@@ -3,7 +3,7 @@ package com.duyp.architecture.clean.redux.app.features.search.items.repoitem
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.duyp.architecture.clean.redux.R
-import com.duyp.architecture.clean.redux.app.inflate
+import com.duyp.architecture.clean.redux.app.common.inflate
 
 class RepoViewHolder(isShowImage: Boolean, parent: ViewGroup, onItemClick: (Long) -> Unit) :
     RecyclerView.ViewHolder(

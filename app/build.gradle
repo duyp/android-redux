@@ -47,7 +47,6 @@ dependencies {
     implementation circularimageview
 
     implementation dagger
-    implementation daggerAndroid
     implementation daggerSupport
     kapt daggerCompiler
     kapt daggerAndroidCompiler
@@ -56,10 +55,6 @@ dependencies {
     implementation rxAndroid
     implementation rxRedux
     implementation rxRelay
-
-    implementation room
-    implementation roomRx
-    kapt roomCompiler
 
     testImplementation junit
 }

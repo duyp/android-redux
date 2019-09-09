@@ -1,4 +1,4 @@
-package com.duyp.architecture.clean.redux.app
+package com.duyp.architecture.clean.redux.app.common
 
 import android.os.Bundle
 import android.view.LayoutInflater
