@@ -1,9 +1,10 @@
 package com.duyp.architecture.clean.redux.data.api.interceptors
 
 import android.net.Uri
+import android.text.TextUtils
 import okhttp3.Interceptor
 import okhttp3.Response
-import okhttp3.ResponseBody.Companion.toResponseBody
+import okhttp3.ResponseBody
 import java.io.IOException
 
 class PaginationInterceptor : Interceptor {
@@ -13,8 +14,9 @@ class PaginationInterceptor : Interceptor {
         val request = chain.request()
         val response = chain.proceed(request)
         val headers = chain.request().headers
-        if (headers.values("Accept").contains("application/vnd.github.html") ||
-            headers.values("Accept").contains("application/vnd.github.VERSION.raw")
+        if (headers.values("Accept").contains("application/vnd.github.html") || headers.values("Accept").contains(
+                "application/vnd.github.VERSION.raw"
+            )
         ) {
             return response//return them as they are.
         }
@@ -47,7 +49,7 @@ class PaginationInterceptor : Interceptor {
                 }
                 json.append(String.format("\"items\":%s}", response.body!!.string()))
                 return response.newBuilder()
-                    .body(json.toString().toResponseBody(response.body!!.contentType()))
+                    .body(ResponseBody.create(response.body!!.contentType(), json.toString()))
                     .build()
             } else if (response.header("link") != null) {
                 val link = response.header("link")
@@ -73,12 +75,14 @@ class PaginationInterceptor : Interceptor {
                             )
                         )
                 }
-                if (pagination.toString().isNotEmpty()) {//hacking for search pagination.
+                if (!TextUtils.isEmpty(pagination.toString())) {//hacking for search pagination.
                     val body = response.body!!.string()
                     return response.newBuilder()
                         .body(
-                            ("{" + pagination + body.substring(1, body.length))
-                                .toResponseBody(response.body!!.contentType())
+                            ResponseBody.create(
+                                response.body!!.contentType(),
+                                "{" + pagination + body.substring(1, body.length)
+                            )
                         )
                         .build()
                 }

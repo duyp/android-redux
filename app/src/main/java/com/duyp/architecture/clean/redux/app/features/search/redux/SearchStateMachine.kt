@@ -2,6 +2,7 @@ package com.duyp.architecture.clean.redux.app.features.search.redux
 
 import android.util.Log
 import com.duyp.architecture.clean.redux.app.common.getMessage
+import com.duyp.architecture.clean.redux.app.common.printIfDebug
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchInternalAction.*
 import com.duyp.architecture.clean.redux.domain.DomainConstants
 import com.duyp.architecture.clean.redux.domain.ListEntity
@@ -15,6 +16,7 @@ import com.freeletics.rxredux.reduxStore
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -40,6 +42,8 @@ sealed class SearchInternalAction : SearchAction {
 
     data class NextPageSuccess(val page: Int, val items: ListEntity<RepoEntity>) :
         SearchInternalAction()
+
+    override fun toString(): String = this::class.java.simpleName
 }
 
 class SearchStateMachine @Inject constructor(
@@ -64,29 +68,38 @@ class SearchStateMachine @Inject constructor(
                 reducer = this::reducer
             )
             .distinctUntilChanged()
-            .doOnNext { Log.d(TAG, "State updated: $it") }
+            .doOnNext { Log.d(TAG, "State updated: ${it.items.size} items") }
     }
 
     fun searchRecentRepoFirstPageSideEffect(): SideEffect<SearchState, SearchAction> =
         { actions, _ ->
             actions.ofType(SearchViewAction.SearchTyping::class.java)
                 .switchMap { action ->
-                    getRecentRepoUseCase.get(action.searchQuery)
-                        .toObservable()
-                        .onErrorReturnItem(emptyList())
-                        .map<SearchAction> {
-                            RecentRepoSuccess(it)
-                        }
+                    if (action.searchQuery.isEmpty())
+                        Observable.just(RecentRepoSuccess(emptyList()))
+                    else
+                        getRecentRepoUseCase.get(action.searchQuery)
+                            .subscribeOn(Schedulers.io())
+                            .toObservable()
+                            .onErrorReturnItem(emptyList())
+                            .map<SearchAction> {
+                                RecentRepoSuccess(it)
+                            }
                 }
         }
 
+    // todo cancel previous search when search query is empty
     fun searchPublicRepoFirstPageSideEffect(): SideEffect<SearchState, SearchAction> =
         { actions, _ ->
             actions.ofType(SearchViewAction.SearchTyping::class.java)
-                .debounce(300, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .filter {
+                    it.searchQuery.isNotEmpty()
+                }
                 .switchMap { action ->
                     val page = DomainConstants.FIRST_PAGE
                     searchPublicRepoUseCase.search(action.searchQuery, page)
+                        .subscribeOn(Schedulers.io())
                         .toObservable()
                         .map {
                             when (it) {
@@ -106,6 +119,7 @@ class SearchStateMachine @Inject constructor(
                     val stateValue = state()
                     val nextPage = state().currentPage + 1
                     searchPublicRepoUseCase.search(stateValue.currentSearchQuery, nextPage)
+                        .subscribeOn(Schedulers.io())
                         .map {
                             when (it) {
                                 is Resource.Error -> NextPageError(it.error)
@@ -118,6 +132,7 @@ class SearchStateMachine @Inject constructor(
         }
 
     fun reducer(state: SearchState, action: SearchAction): SearchState {
+        Log.d(TAG, "reducer reacts on action $action")
         return when (action) {
             is SearchViewAction.SearchTyping -> {
                 SearchState.currentSearchQueryUpdated(
@@ -139,6 +154,7 @@ class SearchStateMachine @Inject constructor(
                 )
             }
             is FirstPageError -> {
+                action.error.originalThrowable.printIfDebug()
                 SearchState.publicRepoError(
                     state,
                     action.error.getMessage()
@@ -158,6 +174,7 @@ class SearchStateMachine @Inject constructor(
                 )
             }
             is NextPageError -> {
+                action.error.originalThrowable.printIfDebug()
                 SearchState.publicRepoError(
                     state,
                     action.error.getMessage()

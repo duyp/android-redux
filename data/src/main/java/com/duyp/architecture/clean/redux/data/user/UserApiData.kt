@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 data class UserApiData(
+
     @SerializedName("id")
     var id: Long = 0,
 

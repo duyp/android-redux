@@ -6,9 +6,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:foreground="?android:selectableItemBackground"
-        android:paddingTop="@dimen/regular"
-        android:paddingEnd="@dimen/regular"
-        android:paddingBottom="@dimen/regular"
+        android:paddingTop="@dimen/medium"
         tools:ignore="RtlSymmetry">
 
     <androidx.cardview.widget.CardView
@@ -16,7 +14,6 @@
             android:layout_width="@dimen/avatar_size_normal"
             android:layout_height="@dimen/avatar_size_normal"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/regular"
             android:layout_marginEnd="@dimen/regular"
             android:background="@color/transparent"
             app:cardCornerRadius="@dimen/xx_tiny">

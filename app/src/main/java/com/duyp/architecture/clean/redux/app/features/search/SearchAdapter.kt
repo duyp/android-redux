@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.duyp.architecture.clean.redux.app.common.ImageLoader
+import com.duyp.architecture.clean.redux.app.features.search.items.ErrorViewHolder
 import com.duyp.architecture.clean.redux.app.features.search.items.HeaderViewHolder
 import com.duyp.architecture.clean.redux.app.features.search.items.PageLoadingViewHolder
 import com.duyp.architecture.clean.redux.app.features.search.items.repoitem.RepoViewHolder
@@ -17,6 +18,7 @@ class SearchAdapter(private val imageLoader: ImageLoader, private val onItemClic
                 onItemClick(it)
             }
             SearchItem.VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
+            SearchItem.VIEW_TYPE_ERROR -> ErrorViewHolder(parent)
             else -> PageLoadingViewHolder(
                 parent
             )
@@ -29,12 +31,16 @@ class SearchAdapter(private val imageLoader: ImageLoader, private val onItemClic
                 is SearchItem.PublicRepo -> (holder as RepoViewHolder).bindData(
                     it.data
                 )
+                is SearchItem.RecentRepo -> (holder as RepoViewHolder).bindData(
+                    it.data
+                )
                 is SearchItem.RecentRepoHeader -> (holder as HeaderViewHolder).bindData(
                     it.text
                 )
                 is SearchItem.PublicRepoHeader -> (holder as HeaderViewHolder).bindData(
                     it.text
                 )
+                is SearchItem.Error -> (holder as ErrorViewHolder).bindData(it.errorMessage)
             }
         }
     }

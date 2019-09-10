@@ -64,6 +64,7 @@ data class SearchState(
         fun publicRepoLoaded(currentState: SearchState, page: Int, list: ListEntity<RepoEntity>) =
             currentState.copy(
                 canLoadMore = list.hasMore(),
+                currentPage = page,
                 items = currentState.items
                     // first update the header
                     .map {

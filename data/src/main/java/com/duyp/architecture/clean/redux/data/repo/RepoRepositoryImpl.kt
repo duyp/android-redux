@@ -16,7 +16,7 @@ class RepoRepositoryImpl @Inject constructor(
     }
 
     override fun getRecentRepos(query: String): Single<List<RepoEntity>> {
-        return repoDao.getRecentRepos()
+        return repoDao.getRecentRepos("%$query%")
             .map { it }
     }
 }
