@@ -11,6 +11,7 @@ import javax.inject.Singleton
 @Module
 object DatabaseModule {
 
+    @JvmStatic
     @Provides
     @Singleton
     fun provideAppDatabase(context: Context) =
@@ -19,5 +20,6 @@ object DatabaseModule {
 
     @JvmStatic
     @Provides
+    @Singleton
     fun provideRepoDao(database: AppDatabase): RepoDao = database.repoDao()
 }

@@ -33,7 +33,7 @@ dependencies {
     implementation dagger
     kapt daggerCompiler
 
-    implementation room
+    api room
     implementation roomRx
     kapt roomCompiler
 

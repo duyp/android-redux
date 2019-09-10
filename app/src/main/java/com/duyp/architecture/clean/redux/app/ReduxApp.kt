@@ -4,10 +4,10 @@ import com.duyp.architecture.clean.redux.app.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 
-class App : DaggerApplication() {
+class ReduxApp : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.create()
+        return DaggerAppComponent.factory().create(this)
     }
 
 }

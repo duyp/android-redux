@@ -45,6 +45,10 @@ dependencies {
     implementation cardView
     implementation material
     implementation circularimageview
+    implementation glide
+
+    implementation(lifecycleExtensions)
+    kapt(lifecycleCompiler)
 
     implementation dagger
     implementation daggerSupport

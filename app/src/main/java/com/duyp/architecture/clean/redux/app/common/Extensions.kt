@@ -1,9 +1,12 @@
 package com.duyp.architecture.clean.redux.app.common
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.annotation.AnimRes
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
@@ -11,9 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import com.duyp.architecture.clean.redux.BuildConfig
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -76,12 +79,43 @@ fun FragmentManager.showFragment(
     }
 }
 
+inline fun <reified VM : ViewModel> Fragment.getViewModel(factory: ViewModelProvider.Factory): VM {
+    return ViewModelProviders.of(this, factory).get(VM::class.java)
+}
+
+inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(factory: ViewModelProvider.Factory): VM {
+    return ViewModelProviders.of(this, factory).get(VM::class.java)
+}
+
 fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(this.context).inflate(resource, this, attachToRoot)
 }
 
 fun View.setVisible(visible: Boolean) {
     this.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+fun EditText.onTextChanged(): Observable<String> {
+    return Observable.create<String> { emitter ->
+        val textWatcher = object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable?) {
+                s?.toString()?.let {
+                    emitter.onNext(it)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        }
+        this.addTextChangedListener(textWatcher)
+        emitter.setCancellable {
+            this.removeTextChangedListener(textWatcher)
+        }
+    }
 }
 
 

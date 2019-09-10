@@ -1,5 +1,6 @@
-package com.duyp.architecture.clean.redux.app.features.search
+package com.duyp.architecture.clean.redux.app.features.search.redux
 
+import com.duyp.architecture.clean.redux.app.features.search.SearchItem
 import com.duyp.architecture.clean.redux.app.features.search.items.repoitem.toViewData
 import com.duyp.architecture.clean.redux.domain.ListEntity
 import com.duyp.architecture.clean.redux.domain.repo.RepoEntity

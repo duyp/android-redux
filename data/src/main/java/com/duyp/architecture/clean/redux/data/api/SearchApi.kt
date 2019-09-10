@@ -1,6 +1,5 @@
-package com.duyp.architecture.clean.redux.data.search
+package com.duyp.architecture.clean.redux.data.api
 
-import com.duyp.architecture.clean.redux.data.api.PageableApiData
 import com.duyp.architecture.clean.redux.data.repo.RepoApiData
 import com.duyp.architecture.clean.redux.data.user.UserApiData
 import io.reactivex.Single

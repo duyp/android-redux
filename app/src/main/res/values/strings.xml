@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Android Redux</string>
+    <string name="search_input_hint">Search repositories</string>
+    <string name="forked">Forked</string>
+    <string name="private_repo">Private</string>
 </resources>

@@ -1,8 +1,8 @@
-package com.duyp.architecture.clean.redux.app.features.search
+package com.duyp.architecture.clean.redux.app.features.search.redux
 
 import android.util.Log
 import com.duyp.architecture.clean.redux.app.common.getMessage
-import com.duyp.architecture.clean.redux.app.features.search.SearchInternalAction.*
+import com.duyp.architecture.clean.redux.app.features.search.redux.SearchInternalAction.*
 import com.duyp.architecture.clean.redux.domain.DomainConstants
 import com.duyp.architecture.clean.redux.domain.ListEntity
 import com.duyp.architecture.clean.redux.domain.Resource
@@ -102,7 +102,7 @@ class SearchStateMachine @Inject constructor(
         { actions, state ->
             actions.ofType(SearchViewAction.LoadNextPage::class.java)
                 .filter { !state().isLoading() }
-                .switchMap { action ->
+                .switchMap {
                     val stateValue = state()
                     val nextPage = state().currentPage + 1
                     searchPublicRepoUseCase.search(stateValue.currentSearchQuery, nextPage)
@@ -120,31 +120,55 @@ class SearchStateMachine @Inject constructor(
     fun reducer(state: SearchState, action: SearchAction): SearchState {
         return when (action) {
             is SearchViewAction.SearchTyping -> {
-                SearchState.currentSearchQueryUpdated(state, action.searchQuery)
+                SearchState.currentSearchQueryUpdated(
+                    state,
+                    action.searchQuery
+                )
             }
             // recent repos
             is RecentRepoSuccess -> {
-                SearchState.recentRepoLoaded(state, action.items)
+                SearchState.recentRepoLoaded(
+                    state,
+                    action.items
+                )
             }
             // first page
             is FirstPageSearching -> {
-                SearchState.publicRepoFirstPageLoading(state)
+                SearchState.publicRepoFirstPageLoading(
+                    state
+                )
             }
             is FirstPageError -> {
-                SearchState.publicRepoError(state, action.error.getMessage())
+                SearchState.publicRepoError(
+                    state,
+                    action.error.getMessage()
+                )
             }
             is FirstPageSuccess -> {
-                SearchState.publicRepoLoaded(state, action.page, action.items)
+                SearchState.publicRepoLoaded(
+                    state,
+                    action.page,
+                    action.items
+                )
             }
             // next page
             is NextPageSearching -> {
-                SearchState.publicRepoNextPageLoading(state)
+                SearchState.publicRepoNextPageLoading(
+                    state
+                )
             }
             is NextPageError -> {
-                SearchState.publicRepoError(state, action.error.getMessage())
+                SearchState.publicRepoError(
+                    state,
+                    action.error.getMessage()
+                )
             }
             is NextPageSuccess -> {
-                SearchState.publicRepoLoaded(state, action.page, action.items)
+                SearchState.publicRepoLoaded(
+                    state,
+                    action.page,
+                    action.items
+                )
             }
             else -> state
         }

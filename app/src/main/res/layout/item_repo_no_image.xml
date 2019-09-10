@@ -77,7 +77,7 @@
                 tools:text="50 minutes ago" />
 
         <TextView
-                android:id="@+id/size"
+                android:id="@+id/tvSize"
                 style="@style/TextAppearanceCaption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

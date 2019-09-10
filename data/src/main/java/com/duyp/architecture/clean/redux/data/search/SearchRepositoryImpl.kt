@@ -1,5 +1,6 @@
 package com.duyp.architecture.clean.redux.data.search
 
+import com.duyp.architecture.clean.redux.data.api.SearchApi
 import com.duyp.architecture.clean.redux.data.api.toEntity
 import com.duyp.architecture.clean.redux.data.repo.RepoApiData
 import com.duyp.architecture.clean.redux.data.repo.toLocal

@@ -105,6 +105,7 @@ ext {
     javaxInject = "javax.inject:javax.inject:${versions.javax}"
 
     circularimageview = 'com.mikhaellopez:circularimageview:3.2.0'
+    glide = "com.github.bumptech.glide:glide:4.9.0"
 
     // unit testing
     junit = "junit:junit:${versions.junit}"
