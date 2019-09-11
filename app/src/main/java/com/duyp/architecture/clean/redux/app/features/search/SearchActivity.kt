@@ -16,6 +16,8 @@ class SearchActivity : BaseActivity() {
 
     lateinit var imageLoader: ImageLoader
 
+    private var textChangeCount = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -36,13 +38,24 @@ class SearchActivity : BaseActivity() {
             }
             .addTo(disposables)
 
+        val isCreatedFromScreenRotated = savedInstanceState != null
         // search input
         edtSearch.onTextChanged()
+            .doOnNext { textChangeCount++ }
+            .filter {
+                if (isCreatedFromScreenRotated)
+                    textChangeCount > 1 // ignore first time text change after screen rotated
+                else
+                    true
+            }
             .subscribe {
                 viewModel.doAction(SearchViewAction.SearchTyping(searchQuery = it))
             }
             .addTo(disposables)
-        edtSearch.requestFocus()
+
+        // don't show soft keyboard again if user rotate screen
+        if (!isCreatedFromScreenRotated)
+            edtSearch.requestFocus()
 
         observe(viewModel.state) {
             adapter.submitList(it.items)
