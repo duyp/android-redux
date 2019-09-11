@@ -21,7 +21,7 @@ class SearchActivity : BaseActivity() {
 
     private var textChangeCount = 0
 
-    private var sharedElementTransitionView: View? = null
+    private var sharedElementTransitionViews: List<View>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +34,8 @@ class SearchActivity : BaseActivity() {
             imageLoader,
             delegate = object : SearchAdapter.Delegate {
 
-                override fun onItemClick(id: Long, transitionView: View) {
-                    sharedElementTransitionView = transitionView
+                override fun onItemClick(id: Long, transitionViews: List<View>) {
+                    sharedElementTransitionViews = transitionViews
                     viewModel.doAction(SearchViewAction.RepoItemClick(id))
                 }
 
@@ -82,7 +82,7 @@ class SearchActivity : BaseActivity() {
         observe(viewModel.navigation) {
             when (it) {
                 is SearchNavigation.RepoDetail ->
-                    DetailActivity.start(this, sharedElementTransitionView, it.id)
+                    DetailActivity.start(this, it.id, sharedElementTransitionViews ?: emptyList())
             }
         }
     }

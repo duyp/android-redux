@@ -7,4 +7,7 @@
     <string name="private_repo">Private</string>
     <string name="reload">Reload</string>
     <string name="detail_sample_message">This is sample detail page</string>
+    <string name="transition_title">transition_name_title</string>
+    <string name="transition_description">transition_description</string>
+    <string name="transition_counter_information">transition_counter_information</string>
 </resources>

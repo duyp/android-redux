@@ -71,17 +71,17 @@ class DetailActivity : BaseActivity() {
 
     companion object {
 
-        fun start(activity: Activity, transitionView: View?, repoId: Long) {
+        fun start(activity: Activity, repoId: Long, transitionViews: List<View>) {
             val intent = Intent(activity, DetailActivity::class.java)
             intent.putExtra(AppConstants.EXTRA_REPO_ID, repoId)
-            val options = transitionView?.let {
-                ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity,
-                    it,
-                    it.transitionName
-                )
+
+            val pair = transitionViews.map {
+                androidx.core.util.Pair(it, it.transitionName)
             }
-            activity.startActivity(intent, options?.toBundle())
+                .toTypedArray()
+
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *pair)
+            activity.startActivity(intent, options.toBundle())
         }
     }
 }

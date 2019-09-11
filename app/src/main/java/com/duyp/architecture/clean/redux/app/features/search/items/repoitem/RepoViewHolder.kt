@@ -16,7 +16,7 @@ import java.text.NumberFormat
 class RepoViewHolder(
     private val imageLoader: ImageLoader,
     parent: ViewGroup,
-    onItemClick: (Long, View) -> Unit
+    onItemClick: (Long, List<View>) -> Unit
 ) :
     RecyclerView.ViewHolder(parent.inflate(R.layout.item_repo)) {
 
@@ -24,7 +24,17 @@ class RepoViewHolder(
 
     init {
         itemView.setOnClickListener {
-            repoId?.let { onItemClick(it, itemView.imvAvatar) }
+            repoId?.let {
+                onItemClick(
+                    it,
+                    listOf(
+                        itemView.imvAvatar,
+                        itemView.title,
+                        itemView.tvDes,
+                        itemView.tvCounterInfo
+                    )
+                )
+            }
         }
     }
 

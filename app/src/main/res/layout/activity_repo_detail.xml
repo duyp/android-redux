@@ -46,6 +46,7 @@
                     android:maxLines="3"
                     android:textColor="?android:textColorPrimary"
                     android:textStyle="bold"
+                    android:transitionName="@string/transition_title"
                     tools:text="When one acquires music and afterlife, one is able to capture heaven." />
 
             <TextView
@@ -55,12 +56,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/regular"
                     android:layout_marginBottom="@dimen/xx_tiny"
+                    android:transitionName="@string/transition_description"
                     tools:text="this is description" />
 
             <com.duyp.architecture.clean.redux.app.widgets.AutoLinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/regular"
+                    android:transitionName="@string/transition_counter_information"
                     app:auto_gravity="start"
                     app:auto_orientation="horizontal">
 

@@ -8,5 +8,5 @@ class GetRecentRepoUseCase @Inject constructor(
 
     fun get(query: String) = repoRepository.getRecentRepos(query)
         .onErrorReturnItem(emptyList())
-        .filter { it.size <= 10 } // temporary
+        .filter { it.size <= 25 } // temporary
 }
