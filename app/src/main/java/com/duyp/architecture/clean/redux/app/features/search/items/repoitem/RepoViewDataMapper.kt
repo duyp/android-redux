@@ -7,7 +7,7 @@ import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
 fun RepoEntity.toViewData(dataFormatter: DataFormatter) =
     RepoViewData(
         id = id(),
-        name = name(),
+        name = name() ?: "Unknown name",
         fullName = fullName(),
         description = description() ?: "No description",
         ownerAvatarUrl = ownerAvatarUrl(),
