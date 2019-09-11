@@ -42,6 +42,7 @@ class SearchActivity : BaseActivity() {
                 viewModel.doAction(SearchViewAction.SearchTyping(searchQuery = it))
             }
             .addTo(disposables)
+        edtSearch.requestFocus()
 
         observe(viewModel.state) {
             adapter.submitList(it.items)
