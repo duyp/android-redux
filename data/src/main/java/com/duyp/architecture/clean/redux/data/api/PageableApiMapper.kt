@@ -8,6 +8,8 @@ fun <EntityType, ApiType : EntityType> PageableApiData<ApiType>.toEntity(): List
 
         override fun items(): List<EntityType> = items
 
+        override fun nextPage(): Int? = next
+
         override fun totalCount(): Long = totalCount ?: 0
 
         override fun hasMore(): Boolean {

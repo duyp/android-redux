@@ -9,5 +9,7 @@ sealed class SearchViewAction :
 
     data class RepoItemClick(val id: Long) : SearchViewAction()
 
+    object ReloadClick : SearchViewAction()
+
     object LoadNextPage : SearchViewAction()
 }

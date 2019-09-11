@@ -5,7 +5,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="@dimen/medium">
+        android:paddingTop="@dimen/small"
+        android:paddingBottom="@dimen/small">
 
     <TextView
             android:id="@+id/tvError"
@@ -13,10 +14,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:padding="@dimen/tiny"
+            android:padding="@dimen/regular"
+            android:textColor="@color/bright_red"
             tools:text="This is error message" />
 
     <Button
+            android:id="@+id/btnReload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/reload" />

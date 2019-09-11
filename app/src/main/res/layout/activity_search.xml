@@ -43,7 +43,7 @@
             android:clipToPadding="false"
             android:paddingStart="@dimen/regular"
             android:paddingEnd="@dimen/regular"
-            android:paddingBottom="@dimen/medium"
+            android:paddingBottom="@dimen/x_large"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 

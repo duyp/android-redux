@@ -7,14 +7,16 @@ import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
 
 data class SearchState(
     val currentSearchQuery: String = "",
-    val currentPage: Int = 0,
+    val nextPage: Int? = null,
     private val canLoadMore: Boolean = false,
     val items: List<SearchItem> = emptyList()
 ) {
 
     fun isLoading() = items.contains(SearchItem.Loading)
 
-    fun canLoadMore() = this.canLoadMore && !isLoading()
+    fun canLoadMore() = canLoadMore && !isLoading()
+
+    fun isNextPageError() = nextPage != null && items.count { it is SearchItem.Error } > 0
 
     companion object {
 
@@ -46,6 +48,7 @@ data class SearchState(
                 .filterNot {
                     it is SearchItem.PublicRepoHeader ||
                             it is SearchItem.Loading ||
+                            it is SearchItem.Error ||
                             it is SearchItem.PublicRepo
                 }
                     // append header and loading
@@ -73,10 +76,13 @@ data class SearchState(
                         + SearchItem.Error(errorMessage)
             )
 
-        fun publicRepoLoaded(currentState: SearchState, page: Int, list: ListEntity<RepoEntity>) =
+        fun publicRepoLoaded(
+            currentState: SearchState,
+            list: ListEntity<RepoEntity>
+        ) =
             currentState.copy(
                 canLoadMore = list.hasMore(),
-                currentPage = page,
+                nextPage = list.nextPage(),
                 items = currentState.items
                     // first update the header
                     .map {

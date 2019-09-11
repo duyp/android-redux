@@ -25,9 +25,15 @@ class SearchActivity : BaseActivity() {
         imageLoader = getImageLoader()
 
         // list
-        val adapter = SearchAdapter(imageLoader, onItemClick = {
-            viewModel.doAction(SearchViewAction.RepoItemClick(it))
-        })
+        val adapter = SearchAdapter(
+            imageLoader,
+            onItemClick = {
+                viewModel.doAction(SearchViewAction.RepoItemClick(it))
+            },
+            onReloadClick = {
+                viewModel.doAction(SearchViewAction.ReloadClick)
+            }
+        )
         searchRecyclerView.adapter = adapter
         searchRecyclerView
             .infiniteScroller {
