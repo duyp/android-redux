@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.duyp.architecture.clean.redux.R
 import com.duyp.architecture.clean.redux.app.common.*
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchViewAction
+import com.duyp.architecture.clean.redux.app.utils.infiniteScroller
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -26,6 +27,14 @@ class SearchActivity : BaseActivity() {
             viewModel.doAction(SearchViewAction.RepoItemClick(it))
         })
         searchRecyclerView.adapter = adapter
+        searchRecyclerView
+            .infiniteScroller {
+                viewModel.state.value?.canLoadMore() ?: false
+            }
+            .subscribe {
+                viewModel.doAction(SearchViewAction.LoadNextPage)
+            }
+            .addTo(disposables)
 
         // search input
         edtSearch.onTextChanged()

@@ -5,8 +5,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
-        android:foreground="?android:selectableItemBackground"
-        android:paddingTop="@dimen/medium"
+        android:background="?android:selectableItemBackground"
+        android:paddingTop="@dimen/small"
+        android:paddingBottom="@dimen/small"
         tools:ignore="RtlSymmetry">
 
     <androidx.cardview.widget.CardView

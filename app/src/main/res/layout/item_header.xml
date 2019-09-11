@@ -5,5 +5,6 @@
         style="@style/TextAppearanceTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/medium"
+        android:paddingTop="@dimen/medium"
+        android:paddingBottom="@dimen/small"
         tools:text="This is header" />

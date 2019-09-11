@@ -8,11 +8,13 @@ import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
 data class SearchState(
     val currentSearchQuery: String = "",
     val currentPage: Int = 0,
-    val canLoadMore: Boolean = false,
+    private val canLoadMore: Boolean = false,
     val items: List<SearchItem> = emptyList()
 ) {
 
     fun isLoading() = items.contains(SearchItem.Loading)
+
+    fun canLoadMore() = this.canLoadMore && !isLoading()
 
     companion object {
 
