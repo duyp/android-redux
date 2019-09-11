@@ -20,12 +20,22 @@ data class SearchState(
             currentSearchQuery = query
         )
 
+        fun clearResults(currentState: SearchState) = currentState.copy(
+            currentSearchQuery = "",
+            items = emptyList()
+        )
+
         fun recentRepoLoaded(currentState: SearchState, list: List<RepoEntity>) = currentState.copy(
-            // recent repo is always come before public repo show we can safely remove all public repo items
-            items = listOf(SearchItem.RecentRepoHeader("Recent repositories:")) +
-                    list.map {
-                        SearchItem.RecentRepo(data = it.toViewData())
-                    }
+            // recent repo is always come before public repo so we can safely remove all public repo items
+            // public repo requests api search and uses debounce when typing
+            items =
+            if (list.isEmpty())
+                emptyList()
+            else
+                listOf(SearchItem.RecentRepoHeader("Recent viewed repositories:")) +
+                        list.map {
+                            SearchItem.RecentRepo(data = it.toViewData())
+                        }
         )
 
         fun publicRepoFirstPageLoading(currentState: SearchState) = currentState.copy(

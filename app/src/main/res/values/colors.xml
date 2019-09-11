@@ -29,13 +29,4 @@
     <color name="turquoise">#FF2BB2BB</color>
     <color name="dark_red">#FF9D3224</color>
 
-    <color name="transparent90">#E6000000</color>
-    <color name="transparent80">#CC000000</color>
-    <color name="transparent70">#B3000000</color>
-    <color name="transparent60">#99000000</color>
-    <color name="transparent50">#80000000</color>
-    <color name="transparent30">#48000000</color>
-    <color name="transparent20">#32000000</color>
-    <color name="transparent10">#16000000</color>
-    <color name="transparent25">#40000000</color>
 </resources>
