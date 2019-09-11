@@ -1,41 +1,33 @@
 package com.duyp.architecture.clean.redux.app.features.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.duyp.architecture.clean.redux.app.common.BaseViewModel
 import com.duyp.architecture.clean.redux.app.common.addTo
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchAction
+import com.duyp.architecture.clean.redux.app.features.search.redux.SearchNavigation
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchState
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchStateMachine
+import com.duyp.architecture.clean.redux.app.utils.SingleLiveEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(private val stateMachine: SearchStateMachine) :
-    ViewModel() {
+    BaseViewModel<SearchState, SearchAction>() {
 
-    private val mutableState = MutableLiveData<SearchState>()
-
-    private val disposables = CompositeDisposable()
-
-    val state: LiveData<SearchState> = mutableState
+    val navigation: SingleLiveEvent<SearchNavigation> = SingleLiveEvent()
 
     init {
-        // observe state from the machine and convert it to live data
-        stateMachine.state
-            // important to set live data values on main thread
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { state -> mutableState.value = state }
+        initStateMachine(stateMachine.state)
+
+        stateMachine.navigation
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                navigation.value = it
+            }
             .addTo(disposables)
     }
 
     fun doAction(action: SearchAction) {
         stateMachine.input.accept(action)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        disposables.dispose()
     }
 
 }

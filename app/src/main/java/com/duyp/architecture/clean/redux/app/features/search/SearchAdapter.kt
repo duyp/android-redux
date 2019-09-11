@@ -12,24 +12,23 @@ import com.duyp.architecture.clean.redux.app.features.search.items.repoitem.Repo
 
 class SearchAdapter(
     private val imageLoader: ImageLoader,
-    private val onItemClick: (Long) -> Unit,
-    private val onReloadClick: () -> Unit
+    private val delegate: Delegate
 ) :
     ListAdapter<SearchItem, RecyclerView.ViewHolder>(searchDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
 
-            SearchItem.VIEW_TYPE_REPO -> RepoViewHolder(imageLoader, parent) {
-                onItemClick(it)
+            SearchItem.VIEW_TYPE_REPO -> RepoViewHolder(imageLoader, parent) { id, avatar ->
+                delegate.onItemClick(id, avatar)
             }
 
             SearchItem.VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
 
             SearchItem.VIEW_TYPE_ERROR -> ErrorViewHolder(parent, View.OnClickListener {
-                onReloadClick()
+                delegate.onReloadClick()
             })
-            
+
             else -> PageLoadingViewHolder(
                 parent
             )
@@ -57,4 +56,11 @@ class SearchAdapter(
     }
 
     override fun getItemViewType(position: Int): Int = getItem(position).getViewType()
+
+    interface Delegate {
+
+        fun onItemClick(id: Long, transitionView: View)
+
+        fun onReloadClick()
+    }
 }

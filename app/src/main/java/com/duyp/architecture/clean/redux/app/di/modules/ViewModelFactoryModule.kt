@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ch.immoscout24.ImmoScout24.v4.injection.viewmodelfactory.ReduxAppViewModelFactory
 import ch.immoscout24.ImmoScout24.v4.injection.viewmodelfactory.ViewModelKey
+import com.duyp.architecture.clean.redux.app.features.detail.DetailViewModel
 import com.duyp.architecture.clean.redux.app.features.search.SearchViewModel
 import dagger.Binds
 import dagger.Module
@@ -23,4 +24,10 @@ interface ViewModelFactoryModule {
     @IntoMap
     @ViewModelKey(SearchViewModel::class)
     fun bindSearchViewModel(vm: SearchViewModel): ViewModel
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailViewModel::class)
+    fun bindDetailViewModel(vm: DetailViewModel): ViewModel
 }

@@ -62,6 +62,8 @@ class SearchStateMachine @Inject constructor(
 
     val input: Relay<SearchAction> = PublishRelay.create()
 
+    val navigation: Relay<SearchNavigation> = PublishRelay.create()
+
     val state: Observable<SearchState>
 
     init {
@@ -75,7 +77,8 @@ class SearchStateMachine @Inject constructor(
                     scrollToLoadNextPageSideEffect(),
                     reloadSideEffect(),
                     searchPublicRepoFirstPageSideEffect(),
-                    searchPublicRepoNextPageSideEffect()
+                    searchPublicRepoNextPageSideEffect(),
+                    navigationSideEffect()
                 ),
                 reducer = this::reducer
             )
@@ -168,17 +171,28 @@ class SearchStateMachine @Inject constructor(
                 }
         }
 
-    fun reloadSideEffect(): SideEffect<SearchState, SearchAction> =
-        { actions, state ->
-            actions.ofType(SearchViewAction.ReloadClick::class.java)
-                .map {
-                    val stateValue = state()
-                    if (stateValue.nextPage == null)
-                        LoadFirstPage(searchQuery = stateValue.currentSearchQuery)
-                    else
-                        LoadNextPage(searchQuery = stateValue.currentSearchQuery)
+    fun reloadSideEffect(): SideEffect<SearchState, SearchAction> = { actions, state ->
+        actions.ofType(SearchViewAction.ReloadClick::class.java)
+            .map {
+                val stateValue = state()
+                if (stateValue.nextPage == null)
+                    LoadFirstPage(searchQuery = stateValue.currentSearchQuery)
+                else
+                    LoadNextPage(searchQuery = stateValue.currentSearchQuery)
+            }
+    }
+
+    fun navigationSideEffect(): SideEffect<SearchState, SearchAction> = { actions, state ->
+        actions
+            .doOnNext {
+                when (it) {
+                    is SearchViewAction.RepoItemClick ->
+                        navigation.accept(SearchNavigation.RepoDetail(it.id))
                 }
-        }
+            }
+            // just navigate without changing state
+            .filter { false }
+    }
 
     fun reducer(state: SearchState, action: SearchAction): SearchState {
         Log.d(TAG, "reducer reacts on action $action")

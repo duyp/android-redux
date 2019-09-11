@@ -1,8 +1,11 @@
 package com.duyp.architecture.clean.redux.app.features.search
 
 import android.os.Bundle
+import android.view.View
 import com.duyp.architecture.clean.redux.R
 import com.duyp.architecture.clean.redux.app.common.*
+import com.duyp.architecture.clean.redux.app.features.detail.DetailActivity
+import com.duyp.architecture.clean.redux.app.features.search.redux.SearchNavigation
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchViewAction
 import com.duyp.architecture.clean.redux.app.utils.infiniteScroller
 import io.reactivex.disposables.CompositeDisposable
@@ -18,6 +21,8 @@ class SearchActivity : BaseActivity() {
 
     private var textChangeCount = 0
 
+    private var sharedElementTransitionView: View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -27,11 +32,17 @@ class SearchActivity : BaseActivity() {
         // list
         val adapter = SearchAdapter(
             imageLoader,
-            onItemClick = {
-                viewModel.doAction(SearchViewAction.RepoItemClick(it))
-            },
-            onReloadClick = {
-                viewModel.doAction(SearchViewAction.ReloadClick)
+            delegate = object : SearchAdapter.Delegate {
+
+                override fun onItemClick(id: Long, transitionView: View) {
+                    sharedElementTransitionView = transitionView
+                    viewModel.doAction(SearchViewAction.RepoItemClick(id))
+                }
+
+                override fun onReloadClick() {
+                    viewModel.doAction(SearchViewAction.ReloadClick)
+
+                }
             }
         )
         searchRecyclerView.adapter = adapter
@@ -50,7 +61,8 @@ class SearchActivity : BaseActivity() {
             .doOnNext { textChangeCount++ }
             .filter {
                 if (isCreatedFromScreenRotated)
-                    textChangeCount > 1 // ignore first time text change after screen rotated
+                // ignore first time text change after screen rotated
+                    textChangeCount > 1
                 else
                     true
             }
@@ -65,6 +77,13 @@ class SearchActivity : BaseActivity() {
 
         observe(viewModel.state) {
             adapter.submitList(it.items)
+        }
+
+        observe(viewModel.navigation) {
+            when (it) {
+                is SearchNavigation.RepoDetail ->
+                    DetailActivity.start(this, sharedElementTransitionView, it.id)
+            }
         }
     }
 

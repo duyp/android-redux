@@ -1,5 +1,6 @@
 package com.duyp.architecture.clean.redux.app.features.search.items.repoitem
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.duyp.architecture.clean.redux.R
@@ -15,7 +16,7 @@ import java.text.NumberFormat
 class RepoViewHolder(
     private val imageLoader: ImageLoader,
     parent: ViewGroup,
-    onItemClick: (Long) -> Unit
+    onItemClick: (Long, View) -> Unit
 ) :
     RecyclerView.ViewHolder(parent.inflate(R.layout.item_repo)) {
 
@@ -23,7 +24,7 @@ class RepoViewHolder(
 
     init {
         itemView.setOnClickListener {
-            repoId?.let { onItemClick(it) }
+            repoId?.let { onItemClick(it, itemView.imvAvatar) }
         }
     }
 
@@ -47,11 +48,11 @@ class RepoViewHolder(
         val numberFormat = NumberFormat.getNumberInstance()
         itemView.stars.text = numberFormat.format(data.stargazersCount)
         itemView.forks.text = numberFormat.format(data.forks)
-        itemView.date.text = ParseDateFormat.getTimeAgo(data.updatedAt)
+        itemView.tvDate.text = ParseDateFormat.getTimeAgo(data.updatedAt)
 
-        itemView.language.setTextOrHideIfEmpty(data.language)
+        itemView.tvLanguage.setTextOrHideIfEmpty(data.language)
         data.languageColor?.let {
-            itemView.language.setTextColor(it)
+            itemView.tvLanguage.setTextColor(it)
         }
     }
 }

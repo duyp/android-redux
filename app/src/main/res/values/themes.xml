@@ -9,6 +9,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonStyle">@style/PrimaryButtonStyle</item>
         <item name="icon_color">@color/dark_grey</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
 </resources>

@@ -3,6 +3,7 @@ package com.duyp.architecture.clean.redux.app.di
 import android.content.Context
 import com.duyp.architecture.clean.redux.app.ReduxApp
 import com.duyp.architecture.clean.redux.app.di.modules.ActivityModule
+import com.duyp.architecture.clean.redux.app.di.modules.AppBindingModule
 import com.duyp.architecture.clean.redux.app.di.modules.ViewModelFactoryModule
 import com.duyp.architecture.clean.redux.data.di.ApiModule
 import com.duyp.architecture.clean.redux.data.di.DatabaseModule
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidSupportInjectionModule::class,
+        AppBindingModule::class,
         ApiModule::class,
         DatabaseModule::class,
         RepositoryBindingModule::class,

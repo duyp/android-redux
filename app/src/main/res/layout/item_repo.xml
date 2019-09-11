@@ -25,6 +25,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_github_shortcut"
+                android:transitionName="@string/transition_image"
                 tools:ignore="ContentDescription" />
     </androidx.cardview.widget.CardView>
 
@@ -89,7 +90,7 @@
                     tools:text="50000" />
 
             <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/tvDate"
                     style="@style/TextAppearanceCaption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -116,7 +117,7 @@
                     tools:visibility="visible" />
 
             <TextView
-                    android:id="@+id/language"
+                    android:id="@+id/tvLanguage"
                     style="@style/TextAppearanceCaption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
