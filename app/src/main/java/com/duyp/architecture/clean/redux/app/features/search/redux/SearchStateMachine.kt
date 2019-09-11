@@ -1,7 +1,6 @@
 package com.duyp.architecture.clean.redux.app.features.search.redux
 
 import android.util.Log
-import com.duyp.architecture.clean.redux.app.common.getMessage
 import com.duyp.architecture.clean.redux.app.common.printIfDebug
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchInternalAction.*
 import com.duyp.architecture.clean.redux.domain.DomainConstants
@@ -199,7 +198,7 @@ class SearchStateMachine @Inject constructor(
 
             is FirstPageError -> {
                 action.error.originalThrowable.printIfDebug()
-                SearchState.publicRepoError(state, action.error.getMessage())
+                SearchState.publicRepoError(state, action.error.message)
             }
             is FirstPageSuccess ->
                 SearchState.publicRepoLoaded(state, action.items)
@@ -210,7 +209,7 @@ class SearchStateMachine @Inject constructor(
 
             is NextPageError -> {
                 action.error.originalThrowable.printIfDebug()
-                SearchState.publicRepoError(state, action.error.getMessage())
+                SearchState.publicRepoError(state, action.error.message)
             }
 
             is NextPageSuccess ->

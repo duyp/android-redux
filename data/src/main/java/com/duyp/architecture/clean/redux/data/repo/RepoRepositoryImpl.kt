@@ -17,8 +17,6 @@ class RepoRepositoryImpl @Inject constructor(
 
     override fun getRecentRepos(query: String): Single<List<RepoEntity>> {
         return repoDao.getRecentRepos("%$query%")
-            .filter { it.size <= 10 }
-            .toSingle()
             .map { it }
     }
 }
