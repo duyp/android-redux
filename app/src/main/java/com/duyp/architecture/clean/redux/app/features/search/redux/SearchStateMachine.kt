@@ -1,6 +1,7 @@
 package com.duyp.architecture.clean.redux.app.features.search.redux
 
 import android.util.Log
+import com.duyp.architecture.clean.redux.app.common.DataFormatter
 import com.duyp.architecture.clean.redux.app.common.printIfDebug
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchInternalAction.*
 import com.duyp.architecture.clean.redux.domain.DomainConstants
@@ -55,7 +56,8 @@ private sealed class SearchInternalAction : SearchAction {
 
 class SearchStateMachine @Inject constructor(
     private val searchPublicRepoUseCase: SearchPublicRepoUseCase,
-    private val getRecentRepoUseCase: GetRecentRepoUseCase
+    private val getRecentRepoUseCase: GetRecentRepoUseCase,
+    private val dataFormatter: DataFormatter
 ) {
 
     val input: Relay<SearchAction> = PublishRelay.create()
@@ -190,7 +192,7 @@ class SearchStateMachine @Inject constructor(
 
             // recent repos
             is RecentRepoSuccess ->
-                SearchState.recentRepoLoaded(state, action.items)
+                SearchState.recentRepoLoaded(state, action.items, dataFormatter)
 
             // first page
             is FirstPageSearching ->
@@ -201,7 +203,7 @@ class SearchStateMachine @Inject constructor(
                 SearchState.publicRepoError(state, action.error.message)
             }
             is FirstPageSuccess ->
-                SearchState.publicRepoLoaded(state, action.items)
+                SearchState.publicRepoLoaded(state, action.items, dataFormatter)
 
             // next page
             is NextPageSearching ->
@@ -213,7 +215,7 @@ class SearchStateMachine @Inject constructor(
             }
 
             is NextPageSuccess ->
-                SearchState.publicRepoLoaded(state, action.items)
+                SearchState.publicRepoLoaded(state, action.items, dataFormatter)
 
             else -> state
         }

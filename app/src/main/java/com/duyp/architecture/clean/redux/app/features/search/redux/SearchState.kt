@@ -1,5 +1,6 @@
 package com.duyp.architecture.clean.redux.app.features.search.redux
 
+import com.duyp.architecture.clean.redux.app.common.DataFormatter
 import com.duyp.architecture.clean.redux.app.features.search.SearchItem
 import com.duyp.architecture.clean.redux.app.features.search.items.repoitem.toViewData
 import com.duyp.architecture.clean.redux.domain.ListEntity
@@ -29,7 +30,11 @@ data class SearchState(
             items = emptyList()
         )
 
-        fun recentRepoLoaded(currentState: SearchState, list: List<RepoEntity>) = currentState.copy(
+        fun recentRepoLoaded(
+            currentState: SearchState,
+            list: List<RepoEntity>,
+            dataFormatter: DataFormatter
+        ) = currentState.copy(
             // recent repo is always come before public repo so we can safely remove all public repo items
             // public repo requests api search and uses debounce when typing
             items =
@@ -38,7 +43,7 @@ data class SearchState(
             else
                 listOf(SearchItem.RecentRepoHeader("Recent viewed repositories:")) +
                         list.map {
-                            SearchItem.RecentRepo(data = it.toViewData())
+                            SearchItem.RecentRepo(data = it.toViewData(dataFormatter))
                         }
         )
 
@@ -78,7 +83,8 @@ data class SearchState(
 
         fun publicRepoLoaded(
             currentState: SearchState,
-            list: ListEntity<RepoEntity>
+            list: ListEntity<RepoEntity>,
+            dataFormatter: DataFormatter
         ) =
             currentState.copy(
                 canLoadMore = list.hasMore(),
@@ -96,7 +102,7 @@ data class SearchState(
                         it is SearchItem.Loading || it is SearchItem.Error
                     }
                         // append results
-                        + list.items().map { SearchItem.PublicRepo(it.toViewData()) }
+                        + list.items().map { SearchItem.PublicRepo(it.toViewData(dataFormatter)) }
             )
     }
 }

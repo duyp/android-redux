@@ -1,9 +1,6 @@
 package com.duyp.architecture.clean.redux.app.utils;
 
-import android.content.Context;
-
 import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Arrays;
@@ -53,15 +50,15 @@ public class ColorGenerator {
     }
 
     @ColorInt
-    public static int getColor(@NonNull final Context context, @Nullable final Object object) {
+    public static int getColor(@Nullable final Object object) {
         //if (AppHelper.isNightMode(context.getResources())) {
         //    return MATERIAL_DARK.getColor(object);
         //} else {
-        return MATERIAL.getColor(object);
+        return MATERIAL.getColorInternal(object);
         //}
     }
 
-    private int getColor(@Nullable Object key) {
+    private int getColorInternal(@Nullable Object key) {
         key = Objects.toString(key, "default");
         return colors.get(Math.abs(key.hashCode()) % colors.size());
     }

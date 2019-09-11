@@ -1,14 +1,12 @@
 package com.duyp.architecture.clean.redux.app.features.search.items.repoitem
 
 import android.graphics.Color
-import android.text.format.Formatter
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.duyp.architecture.clean.redux.R
 import com.duyp.architecture.clean.redux.app.common.ImageLoader
 import com.duyp.architecture.clean.redux.app.common.inflate
-import com.duyp.architecture.clean.redux.app.utils.ColorGenerator
+import com.duyp.architecture.clean.redux.app.common.setTextOrHideIfEmpty
 import com.duyp.architecture.clean.redux.app.utils.ParseDateFormat
 import com.duyp.architecture.clean.redux.app.widgets.LabelSpan
 import com.duyp.architecture.clean.redux.app.widgets.SpannableBuilder
@@ -38,41 +36,33 @@ class RepoViewHolder(
     fun bindData(data: RepoViewData) {
         repoId = data.id
         when {
-            data.fork -> itemView.title.text = SpannableBuilder.builder()
+            data.isFork -> itemView.title.text = SpannableBuilder.builder()
                 .append(" $forked ", LabelSpan(forkColor))
                 .append(" ")
                 .append(data.name, LabelSpan(Color.TRANSPARENT))
-            data.private -> itemView.title.text = SpannableBuilder.builder()
+            data.isPrivate -> itemView.title.text = SpannableBuilder.builder()
                 .append(" $privateRepo ", LabelSpan(privateColor))
                 .append(" ")
                 .append(data.name, LabelSpan(Color.TRANSPARENT))
             else -> itemView.title.text = data.fullName
         }
 
-        itemView.tvDes.text = data.description ?: "No description"
-        
+        itemView.tvDes.text = data.description
+
         data.ownerAvatarUrl?.let {
             imageLoader.loadImage(itemView.imvAvatar, it)
         }
 
-        // size
-        val repoSize = if (data.size > 0) data.size * 1000 else data.size
-        itemView.tvSize.text = Formatter.formatFileSize(itemView.context, repoSize)
+        itemView.tvSize.text = data.size
+
         val numberFormat = NumberFormat.getNumberInstance()
         itemView.stars.text = numberFormat.format(data.stargazersCount)
         itemView.forks.text = numberFormat.format(data.forks)
         itemView.date.text = ParseDateFormat.getTimeAgo(data.updatedAt)
 
-        // language
-        if (data.language.isNullOrEmpty()) {
-            itemView.language.text = ""
-            itemView.language.visibility = View.GONE
-        } else {
-            itemView.language.text = data.language
-            itemView.language.setTextColor(
-                ColorGenerator.getColor(itemView.context, data.language)
-            )
-            itemView.language.visibility = View.VISIBLE
+        itemView.language.setTextOrHideIfEmpty(data.language)
+        data.languageColor?.let {
+            itemView.language.setTextColor(it)
         }
     }
 }

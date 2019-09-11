@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.AnimRes
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
@@ -93,6 +94,11 @@ fun ViewGroup.inflate(@LayoutRes resource: Int, attachToRoot: Boolean = false): 
 
 fun View.setVisible(visible: Boolean) {
     this.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+fun TextView.setTextOrHideIfEmpty(value: String?) {
+    setVisible(!value.isNullOrEmpty())
+    text = value
 }
 
 fun EditText.onTextChanged(): Observable<String> {

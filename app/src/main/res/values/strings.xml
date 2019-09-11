@@ -4,4 +4,5 @@
     <string name="forked">Forked</string>
     <string name="private_repo">Private</string>
     <string name="reload">Reload</string>
+    <string name="detail_sample_message">This is sample detail page</string>
 </resources>
