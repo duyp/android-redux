@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion config.compileVersion
+
+    defaultConfig {
+        minSdkVersion config.minSdk
+        targetSdkVersion config.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
+
+        // github base url
+        buildConfigField "String", "REST_URL", '"https://api.github.com/"'
+        buildConfigField "String", "IMGUR_URL", '"https://api.imgur.com/3/"'
+    }
+}
+
+dependencies {
+    implementation project(':domain')
+
+    implementation rootProject.kotlin
+
+    compileOnly javaxInject
+
+    implementation dagger
+    kapt daggerCompiler
+
+    api room
+    implementation roomRx
+    kapt roomCompiler
+
+    implementation retrofit
+    api retrofitGsonConverter
+    implementation retrofitRxJava2Adapter
+    implementation okHttp
+    implementation okHttpLogging
+
+    testImplementation junit
+}
