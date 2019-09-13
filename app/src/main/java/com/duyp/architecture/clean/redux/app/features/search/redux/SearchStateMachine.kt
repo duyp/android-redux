@@ -192,7 +192,7 @@ class SearchStateMachine @Inject constructor(
     }
 
     fun saveRecentRepoSideEffect(): SideEffect<SearchState, SearchAction> = { actions, _ ->
-        actions.ofType(SearchViewAction.RepoItemClick::class.java)
+        actions.ofType(SearchViewAction.PublicRepoItemClick::class.java)
             .switchMap<SearchAction> {
                 addRecentRepo.add(it.id, Date())
                     .subscribeOn(Schedulers.io())
@@ -205,8 +205,10 @@ class SearchStateMachine @Inject constructor(
         actions
             .doOnNext {
                 when (it) {
-                    is SearchViewAction.RepoItemClick ->
-                        navigation.accept(SearchNavigation.RepoDetail(it.id))
+                    is SearchViewAction.RecentRepoItemClick ->
+                        navigation.accept(SearchNavigation.RecentRepoDetail(it.id))
+                    is SearchViewAction.PublicRepoItemClick ->
+                        navigation.accept(SearchNavigation.PublicRepoDetail(it.id))
                 }
             }
             // just navigate without changing state

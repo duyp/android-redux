@@ -7,7 +7,9 @@ sealed class SearchViewAction :
 
     data class SearchTyping(val searchQuery: String) : SearchViewAction()
 
-    data class RepoItemClick(val id: Long) : SearchViewAction()
+    data class RecentRepoItemClick(val id: Long) : SearchViewAction()
+
+    data class PublicRepoItemClick(val id: Long) : SearchViewAction()
 
     object ReloadClick : SearchViewAction()
 

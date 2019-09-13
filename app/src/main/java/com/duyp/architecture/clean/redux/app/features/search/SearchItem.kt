@@ -5,15 +5,16 @@ import com.duyp.architecture.clean.redux.app.features.search.items.repoitem.Repo
 sealed class SearchItem {
 
     companion object {
-        const val VIEW_TYPE_REPO = 1
-        const val VIEW_TYPE_HEADER = 2
-        const val VIEW_TYPE_LOADING = 3
-        const val VIEW_TYPE_ERROR = 4
+        const val VIEW_TYPE_RECENT_REPO = 1
+        const val VIEW_TYPE_PUBLIC_REPO = 2
+        const val VIEW_TYPE_HEADER = 3
+        const val VIEW_TYPE_LOADING = 4
+        const val VIEW_TYPE_ERROR = 5
     }
 
     fun getViewType(): Int = when (this) {
-        is RecentRepo,
-        is PublicRepo -> VIEW_TYPE_REPO
+        is RecentRepo -> VIEW_TYPE_RECENT_REPO
+        is PublicRepo -> VIEW_TYPE_PUBLIC_REPO
         is RecentRepoHeader,
         is PublicRepoHeader -> VIEW_TYPE_HEADER
         is Loading -> VIEW_TYPE_LOADING

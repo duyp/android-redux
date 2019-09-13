@@ -19,8 +19,12 @@ class SearchAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
 
-            SearchItem.VIEW_TYPE_REPO -> RepoViewHolder(imageLoader, parent) { id, views ->
-                delegate.onItemClick(id, views)
+            SearchItem.VIEW_TYPE_RECENT_REPO -> RepoViewHolder(imageLoader, parent) { id, views ->
+                delegate.onRecentRepoItemClick(id, views)
+            }
+
+            SearchItem.VIEW_TYPE_PUBLIC_REPO -> RepoViewHolder(imageLoader, parent) { id, views ->
+                delegate.onPublicRepoItemClick(id, views)
             }
 
             SearchItem.VIEW_TYPE_HEADER -> HeaderViewHolder(parent)
@@ -59,7 +63,9 @@ class SearchAdapter(
 
     interface Delegate {
 
-        fun onItemClick(id: Long, transitionViews: List<View>)
+        fun onRecentRepoItemClick(id: Long, transitionViews: List<View>)
+
+        fun onPublicRepoItemClick(id: Long, transitionViews: List<View>)
 
         fun onReloadClick()
     }
