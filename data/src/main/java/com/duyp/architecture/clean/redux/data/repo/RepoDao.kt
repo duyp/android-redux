@@ -17,7 +17,4 @@ abstract class RepoDao : BaseDao<RepoLocalData>() {
 
     @Query("SELECT * FROM Repository WHERE id = :id")
     abstract fun getById(id: Long): Single<RepoLocalData>
-
-    @Query("SELECT * FROM Repository WHERE fullName LIKE :query")
-    abstract fun getRecentRepos(query: String): Single<List<RepoLocalData>>
 }

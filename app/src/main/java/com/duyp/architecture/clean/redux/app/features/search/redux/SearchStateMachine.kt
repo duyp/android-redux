@@ -8,7 +8,9 @@ import com.duyp.architecture.clean.redux.domain.DomainConstants
 import com.duyp.architecture.clean.redux.domain.ListEntity
 import com.duyp.architecture.clean.redux.domain.Resource
 import com.duyp.architecture.clean.redux.domain.error.ErrorEntity
-import com.duyp.architecture.clean.redux.domain.repo.GetRecentRepoUseCase
+import com.duyp.architecture.clean.redux.domain.recentrepo.AddRecentRepo
+import com.duyp.architecture.clean.redux.domain.recentrepo.GetRecentRepos
+import com.duyp.architecture.clean.redux.domain.recentrepo.RecentRepoEntity
 import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
 import com.duyp.architecture.clean.redux.domain.search.SearchPublicRepoUseCase
 import com.freeletics.rxredux.SideEffect
@@ -17,6 +19,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -29,7 +32,9 @@ private sealed class SearchInternalAction : SearchAction {
     object ClearResults : SearchInternalAction()
 
     // recent repo
-    data class RecentRepoSuccess(val items: List<RepoEntity>) : SearchInternalAction()
+    data class RecentRepoSuccess(val items: List<RecentRepoEntity>) : SearchInternalAction()
+
+    data class RecentRepoError(val error: ErrorEntity) : SearchInternalAction()
 
     // public repo first page
     data class LoadFirstPage(val searchQuery: String) : SearchInternalAction()
@@ -56,7 +61,8 @@ private sealed class SearchInternalAction : SearchAction {
 
 class SearchStateMachine @Inject constructor(
     private val searchPublicRepoUseCase: SearchPublicRepoUseCase,
-    private val getRecentRepoUseCase: GetRecentRepoUseCase,
+    private val getRecentRepos: GetRecentRepos,
+    private val addRecentRepo: AddRecentRepo,
     private val dataFormatter: DataFormatter
 ) {
 
@@ -78,6 +84,7 @@ class SearchStateMachine @Inject constructor(
                     reloadSideEffect(),
                     searchPublicRepoFirstPageSideEffect(),
                     searchPublicRepoNextPageSideEffect(),
+                    saveRecentRepoSideEffect(),
                     navigationSideEffect()
                 ),
                 reducer = this::reducer
@@ -95,12 +102,14 @@ class SearchStateMachine @Inject constructor(
                     if (action.searchQuery.isEmpty())
                         Observable.just(ClearResults)
                     else
-                        getRecentRepoUseCase.get(action.searchQuery)
+                        getRecentRepos.get(action.searchQuery)
                             .subscribeOn(Schedulers.io())
                             .toObservable()
-                            .onErrorReturnItem(emptyList())
                             .map<SearchAction> {
-                                RecentRepoSuccess(it)
+                                when (it) {
+                                    is Resource.Success -> RecentRepoSuccess(it.data)
+                                    is Resource.Error -> RecentRepoError(it.error)
+                                }
                             }
                 }
         }
@@ -182,7 +191,17 @@ class SearchStateMachine @Inject constructor(
             }
     }
 
-    fun navigationSideEffect(): SideEffect<SearchState, SearchAction> = { actions, state ->
+    fun saveRecentRepoSideEffect(): SideEffect<SearchState, SearchAction> = { actions, _ ->
+        actions.ofType(SearchViewAction.RepoItemClick::class.java)
+            .switchMap<SearchAction> {
+                addRecentRepo.add(it.id, Date())
+                    .subscribeOn(Schedulers.io())
+                    .onErrorComplete()
+                    .toObservable()
+            }
+    }
+
+    fun navigationSideEffect(): SideEffect<SearchState, SearchAction> = { actions, _ ->
         actions
             .doOnNext {
                 when (it) {
@@ -206,7 +225,12 @@ class SearchStateMachine @Inject constructor(
 
             // recent repos
             is RecentRepoSuccess ->
-                SearchState.recentRepoLoaded(state, action.items, dataFormatter)
+                SearchState.recentRepoLoaded(
+                    state,
+                    // temporary ignore viewed time util UI need to show it
+                    action.items.map { it.repo },
+                    dataFormatter
+                )
 
             // first page
             is FirstPageSearching ->
