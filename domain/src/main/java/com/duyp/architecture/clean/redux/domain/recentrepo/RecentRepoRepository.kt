@@ -7,5 +7,7 @@ interface RecentRepoRepository {
 
     fun getRecentRepos(query: String): Single<List<RecentRepoEntity>>
 
+    fun getRecentRepoById(repoId: Long): Single<RecentRepoEntity>
+
     fun addRecentRepo(entity: RecentRepoEntity): Completable
 }

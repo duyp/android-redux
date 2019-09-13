@@ -9,8 +9,8 @@ import com.duyp.architecture.clean.redux.domain.ListEntity
 import com.duyp.architecture.clean.redux.domain.Resource
 import com.duyp.architecture.clean.redux.domain.error.ErrorEntity
 import com.duyp.architecture.clean.redux.domain.recentrepo.AddRecentRepo
-import com.duyp.architecture.clean.redux.domain.recentrepo.GetRecentRepos
 import com.duyp.architecture.clean.redux.domain.recentrepo.RecentRepoEntity
+import com.duyp.architecture.clean.redux.domain.recentrepo.SearchRecentRepos
 import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
 import com.duyp.architecture.clean.redux.domain.search.SearchPublicRepoUseCase
 import com.freeletics.rxredux.SideEffect
@@ -61,7 +61,7 @@ private sealed class SearchInternalAction : SearchAction {
 
 class SearchStateMachine @Inject constructor(
     private val searchPublicRepoUseCase: SearchPublicRepoUseCase,
-    private val getRecentRepos: GetRecentRepos,
+    private val searchRecentRepos: SearchRecentRepos,
     private val addRecentRepo: AddRecentRepo,
     private val dataFormatter: DataFormatter
 ) {
@@ -102,7 +102,7 @@ class SearchStateMachine @Inject constructor(
                     if (action.searchQuery.isEmpty())
                         Observable.just(ClearResults)
                     else
-                        getRecentRepos.get(action.searchQuery)
+                        searchRecentRepos.get(action.searchQuery)
                             .subscribeOn(Schedulers.io())
                             .toObservable()
                             .map<SearchAction> {

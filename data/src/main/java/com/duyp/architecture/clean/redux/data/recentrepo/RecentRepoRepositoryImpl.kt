@@ -1,8 +1,8 @@
 package com.duyp.architecture.clean.redux.repo.data
 
 import com.duyp.architecture.clean.redux.data.recentrepo.RecentRepoDao
-import com.duyp.architecture.clean.redux.data.recentrepo.RecentRepoLocalData
-import com.duyp.architecture.clean.redux.data.repo.toLocal
+import com.duyp.architecture.clean.redux.data.recentrepo.toEntity
+import com.duyp.architecture.clean.redux.data.recentrepo.toLocal
 import com.duyp.architecture.clean.redux.domain.recentrepo.RecentRepoEntity
 import com.duyp.architecture.clean.redux.domain.recentrepo.RecentRepoRepository
 import io.reactivex.Completable
@@ -17,19 +17,19 @@ class RecentRepoRepositoryImpl @Inject constructor(
         return recentRepoDao.getRecentRepos("%$query%")
             .flattenAsObservable { it }
             .map {
-                RecentRepoEntity(
-                    it.repo,
-                    it.dateTime
-                )
+                it.toEntity()
             }
             .toList()
     }
 
+    override fun getRecentRepoById(repoId: Long): Single<RecentRepoEntity> {
+        return recentRepoDao.getRecentRepoById(repoId)
+            .map { it.toEntity() }
+    }
+
     override fun addRecentRepo(entity: RecentRepoEntity): Completable {
         return Completable.fromAction {
-            recentRepoDao.insert(
-                RecentRepoLocalData(entity.repo.toLocal(), entity.dateTime)
-            )
+            recentRepoDao.insert(entity.toLocal())
         }
     }
 
