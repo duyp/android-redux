@@ -2,6 +2,7 @@ package com.duyp.architecture.clean.redux.data.repo
 
 import com.duyp.architecture.clean.redux.data.database.UserLocalData
 import com.duyp.architecture.clean.redux.data.user.UserApiData
+import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
 
 fun RepoApiData.toLocal(): RepoLocalData {
     return RepoLocalData(
@@ -75,4 +76,10 @@ fun UserApiData.toLocal(): UserLocalData {
     localData.twoFactorAuthentication = this.twoFactorAuthentication
     localData.contributions = this.contributions
     return localData
+}
+
+fun RepoEntity.toLocal(): RepoLocalData {
+    return if (this is RepoLocalData)
+        this
+    else error("entity must be implemented from trust source (currently only from local data)")
 }

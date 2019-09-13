@@ -1,23 +1,17 @@
 package com.duyp.architecture.clean.redux.data.recentrepo
 
+import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 import com.duyp.architecture.clean.redux.data.repo.RepoLocalData
 import java.util.*
 
 @Entity(
-    tableName = "RecentRepository", foreignKeys = [ForeignKey(
-        entity = RepoLocalData::class,
-        parentColumns = ["id"],
-        childColumns = ["repoId"],
-        onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE
-    )]
+    tableName = "RecentRepository", primaryKeys = ["repo_id"]
 )
 data class RecentRepoLocalData(
 
-    @PrimaryKey val repoId: Long,
+    @Embedded(prefix = "repo_")
+    val repo: RepoLocalData,
 
     val dateTime: Date
 )

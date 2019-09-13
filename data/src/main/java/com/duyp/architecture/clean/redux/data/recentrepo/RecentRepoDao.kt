@@ -8,7 +8,7 @@ import io.reactivex.Single
 @Dao
 abstract class RecentRepoDao : BaseDao<RecentRepoLocalData>() {
 
-    @Query("SELECT * FROM RecentRepository INNER JOIN Repository WHERE RecentRepository.repoId = Repository.id AND Repository.fullName like :query")
+    @Query("SELECT * FROM RecentRepository WHERE repo_fullName like :query")
     abstract fun getRecentRepos(query: String): Single<List<RecentRepoLocalData>>
 
 }

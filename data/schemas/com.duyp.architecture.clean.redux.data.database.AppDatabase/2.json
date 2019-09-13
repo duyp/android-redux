@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "0556d0f0425f03b088b8bf15a7b1c184",
+    "identityHash": "b91a3986d96c5be2179af0546e13ca02",
     "entities": [
       {
         "tableName": "Repository",
@@ -407,47 +407,407 @@
       },
       {
         "tableName": "RecentRepository",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`repoId` INTEGER NOT NULL, `dateTime` INTEGER NOT NULL, PRIMARY KEY(`repoId`), FOREIGN KEY(`repoId`) REFERENCES `Repository`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`dateTime` INTEGER NOT NULL, `repo_id` INTEGER NOT NULL, `repo_name` TEXT, `repo_fullName` TEXT, `repo_htmlUrl` TEXT, `repo_description` TEXT, `repo_url` TEXT, `repo_homepage` TEXT, `repo_defaultBranch` TEXT, `repo_language` TEXT, `repo_createdAt` INTEGER, `repo_updatedAt` INTEGER, `repo_pushedAt` INTEGER, `repo_size` INTEGER NOT NULL, `repo_stargazersCount` INTEGER NOT NULL, `repo_watchersCount` INTEGER NOT NULL, `repo_forksCount` INTEGER NOT NULL, `repo_openIssuesCount` INTEGER NOT NULL, `repo_forks` INTEGER NOT NULL, `repo_openIssues` INTEGER NOT NULL, `repo_watchers` INTEGER NOT NULL, `repo_fork` INTEGER NOT NULL, `repo_hasIssues` INTEGER NOT NULL, `repo_hasProjects` INTEGER NOT NULL, `repo_hasDownloads` INTEGER NOT NULL, `repo_hasWiki` INTEGER NOT NULL, `repo_hasPages` INTEGER NOT NULL, `repo_owner_id` INTEGER, `repo_owner_login` TEXT, `repo_owner_avatarUrl` TEXT, `repo_owner_gravatarId` TEXT, `repo_owner_url` TEXT, `repo_owner_htmlUrl` TEXT, `repo_owner_followersUrl` TEXT, `repo_owner_followingUrl` TEXT, `repo_owner_gistsUrl` TEXT, `repo_owner_starredUrl` TEXT, `repo_owner_subscriptionsUrl` TEXT, `repo_owner_organizationsUrl` TEXT, `repo_owner_reposUrl` TEXT, `repo_owner_eventsUrl` TEXT, `repo_owner_receivedEventsUrl` TEXT, `repo_owner_type` TEXT, `repo_owner_siteAdmin` INTEGER, `repo_owner_name` TEXT, `repo_owner_company` TEXT, `repo_owner_blog` TEXT, `repo_owner_location` TEXT, `repo_owner_email` TEXT, `repo_owner_hireable` INTEGER, `repo_owner_bio` TEXT, `repo_owner_publicRepos` INTEGER, `repo_owner_publicGists` INTEGER, `repo_owner_followers` INTEGER, `repo_owner_following` INTEGER, `repo_owner_createdAt` INTEGER, `repo_owner_updatedAt` INTEGER, `repo_owner_privateGists` INTEGER, `repo_owner_totalPrivateRepos` INTEGER, `repo_owner_ownedPrivateRepos` INTEGER, `repo_owner_diskUsage` INTEGER, `repo_owner_collaborators` INTEGER, `repo_owner_twoFactorAuthentication` INTEGER, `repo_owner_contributions` INTEGER, PRIMARY KEY(`repo_id`))",
         "fields": [
-          {
-            "fieldPath": "repoId",
-            "columnName": "repoId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "dateTime",
             "columnName": "dateTime",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "repo.id",
+            "columnName": "repo_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.name",
+            "columnName": "repo_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.fullName",
+            "columnName": "repo_fullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.htmlUrl",
+            "columnName": "repo_htmlUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.description",
+            "columnName": "repo_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.url",
+            "columnName": "repo_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.homepage",
+            "columnName": "repo_homepage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.defaultBranch",
+            "columnName": "repo_defaultBranch",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.language",
+            "columnName": "repo_language",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.createdAt",
+            "columnName": "repo_createdAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.updatedAt",
+            "columnName": "repo_updatedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.pushedAt",
+            "columnName": "repo_pushedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.size",
+            "columnName": "repo_size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.stargazersCount",
+            "columnName": "repo_stargazersCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.watchersCount",
+            "columnName": "repo_watchersCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.forksCount",
+            "columnName": "repo_forksCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.openIssuesCount",
+            "columnName": "repo_openIssuesCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.forks",
+            "columnName": "repo_forks",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.openIssues",
+            "columnName": "repo_openIssues",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.watchers",
+            "columnName": "repo_watchers",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.fork",
+            "columnName": "repo_fork",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.hasIssues",
+            "columnName": "repo_hasIssues",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.hasProjects",
+            "columnName": "repo_hasProjects",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.hasDownloads",
+            "columnName": "repo_hasDownloads",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.hasWiki",
+            "columnName": "repo_hasWiki",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.hasPages",
+            "columnName": "repo_hasPages",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repo.owner.id",
+            "columnName": "repo_owner_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.login",
+            "columnName": "repo_owner_login",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.avatarUrl",
+            "columnName": "repo_owner_avatarUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.gravatarId",
+            "columnName": "repo_owner_gravatarId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.url",
+            "columnName": "repo_owner_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.htmlUrl",
+            "columnName": "repo_owner_htmlUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.followersUrl",
+            "columnName": "repo_owner_followersUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.followingUrl",
+            "columnName": "repo_owner_followingUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.gistsUrl",
+            "columnName": "repo_owner_gistsUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.starredUrl",
+            "columnName": "repo_owner_starredUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.subscriptionsUrl",
+            "columnName": "repo_owner_subscriptionsUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.organizationsUrl",
+            "columnName": "repo_owner_organizationsUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.reposUrl",
+            "columnName": "repo_owner_reposUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.eventsUrl",
+            "columnName": "repo_owner_eventsUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.receivedEventsUrl",
+            "columnName": "repo_owner_receivedEventsUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.type",
+            "columnName": "repo_owner_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.siteAdmin",
+            "columnName": "repo_owner_siteAdmin",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.name",
+            "columnName": "repo_owner_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.company",
+            "columnName": "repo_owner_company",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.blog",
+            "columnName": "repo_owner_blog",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.location",
+            "columnName": "repo_owner_location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.email",
+            "columnName": "repo_owner_email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.hireable",
+            "columnName": "repo_owner_hireable",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.bio",
+            "columnName": "repo_owner_bio",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.publicRepos",
+            "columnName": "repo_owner_publicRepos",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.publicGists",
+            "columnName": "repo_owner_publicGists",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.followers",
+            "columnName": "repo_owner_followers",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.following",
+            "columnName": "repo_owner_following",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.createdAt",
+            "columnName": "repo_owner_createdAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.updatedAt",
+            "columnName": "repo_owner_updatedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.privateGists",
+            "columnName": "repo_owner_privateGists",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.totalPrivateRepos",
+            "columnName": "repo_owner_totalPrivateRepos",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.ownedPrivateRepos",
+            "columnName": "repo_owner_ownedPrivateRepos",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.diskUsage",
+            "columnName": "repo_owner_diskUsage",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.collaborators",
+            "columnName": "repo_owner_collaborators",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.twoFactorAuthentication",
+            "columnName": "repo_owner_twoFactorAuthentication",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repo.owner.contributions",
+            "columnName": "repo_owner_contributions",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "repoId"
+            "repo_id"
           ],
           "autoGenerate": false
         },
         "indices": [],
-        "foreignKeys": [
-          {
-            "table": "Repository",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "repoId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0556d0f0425f03b088b8bf15a7b1c184')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b91a3986d96c5be2179af0546e13ca02')"
     ]
   }
 }
