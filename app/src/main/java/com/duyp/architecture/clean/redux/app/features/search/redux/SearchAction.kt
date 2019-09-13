@@ -13,5 +13,5 @@ sealed class SearchViewAction :
 
     object ReloadClick : SearchViewAction()
 
-    object LoadNextPage : SearchViewAction()
+    object ScrollToEnd : SearchViewAction()
 }

@@ -56,7 +56,7 @@ class SearchActivity : BaseActivity() {
                 viewModel.state.value?.canLoadMore() ?: false
             }
             .subscribe {
-                viewModel.doAction(SearchViewAction.LoadNextPage)
+                viewModel.doAction(SearchViewAction.ScrollToEnd)
             }
             .addTo(disposables)
 

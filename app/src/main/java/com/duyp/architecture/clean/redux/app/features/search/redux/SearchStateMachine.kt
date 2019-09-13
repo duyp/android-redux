@@ -2,22 +2,21 @@ package com.duyp.architecture.clean.redux.app.features.search.redux
 
 import android.util.Log
 import com.duyp.architecture.clean.redux.app.features.search.redux.SearchInternalAction.ClearResults
-import com.duyp.architecture.clean.redux.app.features.search.redux.publicrepo.SearchPublicRepoAction
-import com.duyp.architecture.clean.redux.app.features.search.redux.publicrepo.SearchPublicRepoRedux
-import com.duyp.architecture.clean.redux.app.features.search.redux.recentrepo.SearchRecentRepoAction
-import com.duyp.architecture.clean.redux.app.features.search.redux.recentrepo.SearchRecentReposRedux
-import com.duyp.architecture.clean.redux.domain.recentrepo.AddRecentRepo
+import com.duyp.architecture.clean.redux.app.features.search.redux.publicrepo.PublicRepoAction
+import com.duyp.architecture.clean.redux.app.features.search.redux.publicrepo.PublicRepoRedux
+import com.duyp.architecture.clean.redux.app.features.search.redux.recentrepo.RecentRepoAction
+import com.duyp.architecture.clean.redux.app.features.search.redux.recentrepo.RecentReposRedux
 import com.freeletics.rxredux.SideEffect
 import com.freeletics.rxredux.reduxStore
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val TAG = "SearchState"
+
+private const val MIN_SEARCH_QUERY_LENGTH = 3
 
 private sealed class SearchInternalAction : SearchAction {
 
@@ -27,9 +26,8 @@ private sealed class SearchInternalAction : SearchAction {
 }
 
 class SearchStateMachine @Inject constructor(
-    private val searchRecentReposRedux: SearchRecentReposRedux,
-    private val searchPublicRepoRedux: SearchPublicRepoRedux,
-    private val addRecentRepo: AddRecentRepo
+    private val recentReposRedux: RecentReposRedux,
+    private val searchPublicRepoRedux: PublicRepoRedux
 ) {
 
     val input: Relay<SearchAction> = PublishRelay.create()
@@ -48,79 +46,99 @@ class SearchStateMachine @Inject constructor(
                     publicRepoTypingSideEffect(),
                     scrollToLoadNextPageSideEffect(),
                     reloadSideEffect(),
-                    saveRecentRepoSideEffect(),
-                    navigationSideEffect()
-                ) + searchRecentReposRedux.allSideEffects + searchPublicRepoRedux.allSideEffect,
+                    recentRepoClickSideEffect(),
+                    publicRepoClickSideEffect()
+                ) + recentReposRedux.allSideEffects + searchPublicRepoRedux.allSideEffect,
                 reducer = this::reducer
             )
             .distinctUntilChanged()
             .doOnNext { Log.d(TAG, "State updated: ${it.items.size} items") }
     }
 
+    /**
+     * typing: search recent repo after every typing, if search query is empty -> clear results
+     * and cancel previous recent repo search
+     */
     fun recentRepoTypingSideEffect(): SideEffect<SearchState, SearchAction> = { actions, state ->
         actions.ofType(SearchViewAction.SearchTyping::class.java)
             .switchMap {
                 if (it.searchQuery.isEmpty())
-                    Observable.just(ClearResults)
+                    Observable.fromArray(ClearResults, RecentRepoAction.CancelSearch)
                 else
-                    Observable.just(SearchRecentRepoAction.SearchRecentRepo(it.searchQuery))
+                    Observable.just(RecentRepoAction.SearchRecentRepo(it.searchQuery))
             }
     }
 
+    /**
+     * typing: the query length must be >= [MIN_SEARCH_QUERY_LENGTH] otherwise previous search
+     * request will be canceled
+     */
     fun publicRepoTypingSideEffect(): SideEffect<SearchState, SearchAction> =
         { actions, _ ->
             actions.ofType(SearchViewAction.SearchTyping::class.java)
                 // debounce to avoid too much requests
                 .debounce(500, TimeUnit.MILLISECONDS)
-                .map { SearchPublicRepoAction.LoadFirstPage(it.searchQuery) }
+                .map {
+                    if (it.searchQuery.length < MIN_SEARCH_QUERY_LENGTH)
+                        PublicRepoAction.CancelSearch
+                    else
+                        PublicRepoAction.LoadFirstPage(it.searchQuery)
+                }
         }
 
+    /**
+     * scroll to end of list: load next page
+     */
     fun scrollToLoadNextPageSideEffect(): SideEffect<SearchState, SearchAction> =
         { actions, state ->
-            actions.ofType(SearchViewAction.LoadNextPage::class.java)
+            actions.ofType(SearchViewAction.ScrollToEnd::class.java)
                 .filter {
                     // as the error view has its own reload button, so lets user do it manually
                     !state().isNextPageError()
                 }
                 .map {
-                    SearchPublicRepoAction.LoadNextPage(searchQuery = state().currentSearchQuery)
+                    PublicRepoAction.LoadNextPage(searchQuery = state().currentSearchQuery)
                 }
         }
 
-
+    /**
+     * Reload click: load first page or load next page
+     */
     fun reloadSideEffect(): SideEffect<SearchState, SearchAction> = { actions, state ->
         actions.ofType(SearchViewAction.ReloadClick::class.java)
             .map {
                 val stateValue = state()
                 if (stateValue.nextPage == null)
-                    SearchPublicRepoAction.LoadFirstPage(searchQuery = stateValue.currentSearchQuery)
+                    PublicRepoAction.LoadFirstPage(searchQuery = stateValue.currentSearchQuery)
                 else
-                    SearchPublicRepoAction.LoadNextPage(searchQuery = stateValue.currentSearchQuery)
+                    PublicRepoAction.LoadNextPage(searchQuery = stateValue.currentSearchQuery)
             }
     }
 
-    fun saveRecentRepoSideEffect(): SideEffect<SearchState, SearchAction> = { actions, _ ->
-        actions.ofType(SearchViewAction.PublicRepoItemClick::class.java)
-            .switchMap<SearchAction> {
-                addRecentRepo.add(it.id, Date())
-                    .subscribeOn(Schedulers.io())
-                    .onErrorComplete()
-                    .toObservable()
-            }
-    }
 
-    fun navigationSideEffect(): SideEffect<SearchState, SearchAction> = { actions, _ ->
-        actions
+    /**
+     * Recent repo click: open repo detail as well as saving recent viewed repo
+     */
+    fun recentRepoClickSideEffect(): SideEffect<SearchState, SearchAction> = { actions, state ->
+        actions.ofType(SearchViewAction.RecentRepoItemClick::class.java)
             .doOnNext {
-                when (it) {
-                    is SearchViewAction.RecentRepoItemClick ->
-                        navigation.accept(SearchNavigation.RecentRepoDetail(it.id))
-                    is SearchViewAction.PublicRepoItemClick ->
-                        navigation.accept(SearchNavigation.PublicRepoDetail(it.id))
-                }
+                navigation.accept(SearchNavigation.RecentRepoDetail(it.id))
             }
-            // just navigate without changing state
+            // just navigate then do nothing
             .filter { false }
+    }
+
+    /**
+     * Public repo click: open repo detail as well as saving recent viewed repo
+     */
+    fun publicRepoClickSideEffect(): SideEffect<SearchState, SearchAction> = { actions, state ->
+        actions.ofType(SearchViewAction.PublicRepoItemClick::class.java)
+            .doOnNext {
+                navigation.accept(SearchNavigation.PublicRepoDetail(it.id))
+            }
+            .map {
+                RecentRepoAction.SaveRecentRepo(repoId = it.id)
+            }
     }
 
     fun reducer(state: SearchState, action: SearchAction): SearchState {
@@ -132,9 +150,9 @@ class SearchStateMachine @Inject constructor(
 
             is ClearResults -> SearchState.clearResults(state)
 
-            is SearchRecentRepoAction -> searchRecentReposRedux.reducer(state, action)
+            is RecentRepoAction -> recentReposRedux.reducer(state, action)
 
-            is SearchPublicRepoAction -> searchPublicRepoRedux.reducer(state, action)
+            is PublicRepoAction -> searchPublicRepoRedux.reducer(state, action)
 
             else -> state
         }

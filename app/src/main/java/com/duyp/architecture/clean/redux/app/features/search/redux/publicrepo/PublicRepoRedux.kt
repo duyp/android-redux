@@ -8,42 +8,38 @@ import com.duyp.architecture.clean.redux.domain.DomainConstants
 import com.duyp.architecture.clean.redux.domain.Resource
 import com.duyp.architecture.clean.redux.domain.search.SearchPublicRepos
 import com.freeletics.rxredux.SideEffect
-import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-private const val MIN_SEARCH_QUERY_LENGTH = 3
-
-class SearchPublicRepoRedux @Inject constructor(
+class PublicRepoRedux @Inject constructor(
     searchPublicRepos: SearchPublicRepos,
     private val dataFormatter: DataFormatter
 ) {
 
     val searchPublicRepoFirstPageSideEffect: SideEffect<SearchState, SearchAction> =
         { actions, _ ->
-            actions.ofType(SearchPublicRepoAction.LoadFirstPage::class.java)
+            actions.ofType(PublicRepoAction.LoadFirstPage::class.java)
                 // use switch map to cancel previous search request
                 .switchMap<SearchAction> { action ->
-                    if (action.searchQuery.length < MIN_SEARCH_QUERY_LENGTH) {
-                        return@switchMap Observable.empty()
-                    }
                     val page = DomainConstants.FIRST_PAGE
                     searchPublicRepos.search(action.searchQuery, page)
                         .subscribeOn(Schedulers.io())
                         .toObservable()
                         .map {
                             when (it) {
-                                is Resource.Error -> SearchPublicRepoAction.FirstPageError(it.error)
-                                is Resource.Success -> SearchPublicRepoAction.FirstPageSuccess(it.data)
+                                is Resource.Error -> PublicRepoAction.FirstPageError(it.error)
+                                is Resource.Success -> PublicRepoAction.FirstPageSuccess(it.data)
                             }
                         }
-                        .startWith(SearchPublicRepoAction.FirstPageSearching)
+                        .startWith(PublicRepoAction.FirstPageSearching)
                 }
+                // only take result util CancelSearch action fired
+                .takeUntil(actions.ofType(PublicRepoAction.CancelSearch::class.java))
         }
 
     val searchPublicRepoNextPageSideEffect: SideEffect<SearchState, SearchAction> =
         { actions, state ->
-            actions.ofType(SearchPublicRepoAction.LoadNextPage::class.java)
+            actions.ofType(PublicRepoAction.LoadNextPage::class.java)
                 .filter {
                     val stateValue = state()
                     // only load next page if has next page and not is loading
@@ -56,12 +52,12 @@ class SearchPublicRepoRedux @Inject constructor(
                         .subscribeOn(Schedulers.io())
                         .map {
                             when (it) {
-                                is Resource.Error -> SearchPublicRepoAction.NextPageError(it.error)
-                                is Resource.Success -> SearchPublicRepoAction.NextPageSuccess(it.data)
+                                is Resource.Error -> PublicRepoAction.NextPageError(it.error)
+                                is Resource.Success -> PublicRepoAction.NextPageSuccess(it.data)
                             }
                         }
                         .toObservable()
-                        .startWith(SearchPublicRepoAction.NextPageSearching)
+                        .startWith(PublicRepoAction.NextPageSearching)
                 }
         }
 
@@ -70,29 +66,29 @@ class SearchPublicRepoRedux @Inject constructor(
         searchPublicRepoNextPageSideEffect
     )
 
-    fun reducer(state: SearchState, action: SearchPublicRepoAction): SearchState {
+    fun reducer(state: SearchState, action: PublicRepoAction): SearchState {
         return when (action) {
             // first page
-            is SearchPublicRepoAction.FirstPageSearching ->
+            is PublicRepoAction.FirstPageSearching ->
                 SearchState.publicRepoFirstPageLoading(state)
 
-            is SearchPublicRepoAction.FirstPageError -> {
+            is PublicRepoAction.FirstPageError -> {
                 action.error.originalThrowable.printIfDebug()
                 SearchState.publicRepoError(state, action.error.message)
             }
-            is SearchPublicRepoAction.FirstPageSuccess ->
+            is PublicRepoAction.FirstPageSuccess ->
                 SearchState.publicRepoLoaded(state, action.items, dataFormatter)
 
             // next page
-            is SearchPublicRepoAction.NextPageSearching ->
+            is PublicRepoAction.NextPageSearching ->
                 SearchState.publicRepoNextPageLoading(state)
 
-            is SearchPublicRepoAction.NextPageError -> {
+            is PublicRepoAction.NextPageError -> {
                 action.error.originalThrowable.printIfDebug()
                 SearchState.publicRepoError(state, action.error.message)
             }
 
-            is SearchPublicRepoAction.NextPageSuccess ->
+            is PublicRepoAction.NextPageSuccess ->
                 SearchState.publicRepoLoaded(state, action.items, dataFormatter)
 
             else -> state
