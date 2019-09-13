@@ -6,7 +6,7 @@ import com.duyp.architecture.clean.redux.domain.error.ErrorHandlingService
 import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
 import javax.inject.Inject
 
-class SearchPublicRepoUseCase @Inject constructor(
+class SearchPublicRepos @Inject constructor(
     private val repository: SearchRepository,
     private val errorHandlingService: ErrorHandlingService
 ) {

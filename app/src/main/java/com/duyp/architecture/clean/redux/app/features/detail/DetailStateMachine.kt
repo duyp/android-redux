@@ -5,7 +5,7 @@ import com.duyp.architecture.clean.redux.app.common.DataFormatter
 import com.duyp.architecture.clean.redux.domain.Resource
 import com.duyp.architecture.clean.redux.domain.error.ErrorEntity
 import com.duyp.architecture.clean.redux.domain.recentrepo.GetSingleRecentRepo
-import com.duyp.architecture.clean.redux.domain.repo.GetRepoUseCase
+import com.duyp.architecture.clean.redux.domain.repo.GetRepo
 import com.duyp.architecture.clean.redux.domain.repo.RepoEntity
 import com.freeletics.rxredux.SideEffect
 import com.freeletics.rxredux.reduxStore
@@ -33,7 +33,7 @@ private data class DetailLoadedAction(val entity: RepoEntity) : DetailAction()
 private data class DetailLoadErrorAction(val error: ErrorEntity) : DetailAction()
 
 class DetailStateMachine @Inject constructor(
-    private val getRepoUseCase: GetRepoUseCase,
+    private val getRepo: GetRepo,
     private val getSingleRecentRepo: GetSingleRecentRepo,
     private val dataFormatter: DataFormatter
 ) {
@@ -56,7 +56,7 @@ class DetailStateMachine @Inject constructor(
         { actions, _ ->
             actions.ofType(DetailAction.LoadRepoDetail::class.java)
                 .switchMap { action ->
-                    getRepoUseCase.get(action.id)
+                    getRepo.get(action.id)
                         .subscribeOn(Schedulers.io())
                         .toObservable()
                         .map {

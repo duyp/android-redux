@@ -4,7 +4,7 @@ import com.duyp.architecture.clean.redux.domain.Resource
 import com.duyp.architecture.clean.redux.domain.error.ErrorHandlingService
 import javax.inject.Inject
 
-class GetRepoUseCase @Inject constructor(
+class GetRepo @Inject constructor(
     private val repoRepository: RepoRepository,
     private val errorHandlingService: ErrorHandlingService
 ) {
