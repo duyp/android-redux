@@ -34,9 +34,14 @@ class SearchActivity : BaseActivity() {
             imageLoader,
             delegate = object : SearchAdapter.Delegate {
 
-                override fun onItemClick(id: Long, transitionViews: List<View>) {
+                override fun onRecentRepoItemClick(id: Long, transitionViews: List<View>) {
                     sharedElementTransitionViews = transitionViews
-                    viewModel.doAction(SearchViewAction.RepoItemClick(id))
+                    viewModel.doAction(SearchViewAction.RecentRepoItemClick(id))
+                }
+
+                override fun onPublicRepoItemClick(id: Long, transitionViews: List<View>) {
+                    sharedElementTransitionViews = transitionViews
+                    viewModel.doAction(SearchViewAction.PublicRepoItemClick(id))
                 }
 
                 override fun onReloadClick() {
@@ -81,8 +86,11 @@ class SearchActivity : BaseActivity() {
 
         observe(viewModel.navigation) {
             when (it) {
-                is SearchNavigation.RepoDetail ->
-                    DetailActivity.start(this, it.id, sharedElementTransitionViews ?: emptyList())
+                is SearchNavigation.RecentRepoDetail ->
+                    openDetail(repoId = it.id, fromRecentRepo = true)
+
+                is SearchNavigation.PublicRepoDetail ->
+                    openDetail(repoId = it.id, fromRecentRepo = false)
             }
         }
     }
@@ -90,5 +98,14 @@ class SearchActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()
+    }
+
+    private fun openDetail(repoId: Long, fromRecentRepo: Boolean) {
+        DetailActivity.start(
+            this,
+            repoId,
+            fromRecentRepo,
+            transitionViews = sharedElementTransitionViews ?: emptyList()
+        )
     }
 }

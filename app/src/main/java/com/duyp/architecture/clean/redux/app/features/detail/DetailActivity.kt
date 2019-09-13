@@ -32,9 +32,10 @@ class DetailActivity : BaseActivity() {
         }
 
         val repoId = intent.getLongExtra(AppConstants.EXTRA_REPO_ID, 0)
+        val fromRecentRepo = intent.getBooleanExtra(AppConstants.EXTRA_FROM_RECENT_REPO, false)
         // only load repo if this isn't created from screen rotation
         if (savedInstanceState == null) {
-            viewModel.loadRepo(repoId)
+            viewModel.loadRepo(repoId, fromRecentRepo)
         }
     }
 
@@ -71,9 +72,15 @@ class DetailActivity : BaseActivity() {
 
     companion object {
 
-        fun start(activity: Activity, repoId: Long, transitionViews: List<View>) {
+        fun start(
+            activity: Activity,
+            repoId: Long,
+            fromRecentRepo: Boolean,
+            transitionViews: List<View>
+        ) {
             val intent = Intent(activity, DetailActivity::class.java)
             intent.putExtra(AppConstants.EXTRA_REPO_ID, repoId)
+            intent.putExtra(AppConstants.EXTRA_FROM_RECENT_REPO, fromRecentRepo)
 
             val pair = transitionViews.map {
                 androidx.core.util.Pair(it, it.transitionName)

@@ -12,7 +12,12 @@ class DetailViewModel @Inject constructor(
         initStateMachine(detailStateMachine.state)
     }
 
-    fun loadRepo(id: Long) {
-        detailStateMachine.input.accept(DetailAction.LoadRepoDetail(id))
+    fun loadRepo(id: Long, fromRecentRepo: Boolean) {
+        detailStateMachine.input.accept(
+            if (fromRecentRepo)
+                DetailAction.LoadRecentRepoDetail(id)
+            else
+                DetailAction.LoadRepoDetail(id)
+        )
     }
 }
